@@ -1,0 +1,50 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2708";
+
+	/* System LEDs */
+	fragment@0 {
+		target = <&leds>;
+		__overlay__ {
+			compatible = "gpio-leds";
+			yrl028_sd {
+				label = "yrl028_sd";
+				gpios = <&gpio 27 1>; // PI_USER_GRN_C
+				linux,default-trigger = "mmc0";
+			};
+			yrl028_wrx {
+				label = "yrl028_wrx";
+				gpios = <&gpio 17 1>; // PI_DATA_RED_C
+				linux,default-trigger = "phy0rx";
+			};
+			yrl028_wtx {
+				label = "yrl028_wtx";
+				gpios = <&gpio 4 1>; // PI_DATA_GRN_C
+				linux,default-trigger = "phy0tx";
+			};
+			yrl028_boot {
+				label = "yrl028_boot";
+				gpios = <&gpio 23 1>; // PI_USER_RED_C
+				linux,default-trigger = "heartbeat";
+			};
+		};
+	};
+
+	/* Control switch keys */
+	fragment@1 {
+		target-path = "/soc";
+		__dormant__ {
+			control-switches {
+				compatible = "gpio-keys";
+				yrl028_pushbutton {
+					label = "yrl028_pushbutton";
+					gpios = <&gpio 5 0>; // SW1
+					linux,code = <256>;
+				};
+			};
+		};
+	};
+
+};
