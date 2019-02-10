@@ -37,7 +37,9 @@ SWITCH_INTERRUPT_PIN    = 25                                                    
 SWITCH_GPIO_ADDRESS     = 0x20                                                  #I2C Address of GPIO expender on YRL015 switch board
 ADC_BUS                 = 9                                                     #The bus which the ADS7830 ADC is connected to [i2c_9 on YRL028]
 ADC_ADDRESS             = 0x48                                                  #The I2C address for the ADS7830
-MOTORS_BUS              = 7                     
+MOTORS_BUS              = 7
+ARDUINO_BUS             = 10
+ARDUINO_ADDRESS         = 0x57                    
 MOTOR1_ADDRESS          = 0x60
 MOTOR2_ADDRESS          = 0x62
 
