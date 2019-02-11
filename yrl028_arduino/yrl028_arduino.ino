@@ -34,7 +34,7 @@ boolean check_switch() {
 }
 
 void i2c_receive_event(int howMany) {
-  Serial.println(howmany);
+  Serial.println(howMany);
   while (1 < Wire.available()) { // loop through all but the last
     char c = Wire.read(); // receive byte as a character
     Serial.print(c);      
