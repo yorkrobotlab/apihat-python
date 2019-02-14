@@ -11,6 +11,12 @@ import logging,sys
 LOGGING_MODE = logging.INFO
 #LOGGING_MODE = logging.DEBUG
 
+ROBOT_SENSOR_MODEL = [
+    ['analog-1','2y0a21',312,14],
+    ['analog-2','2y0a21',342,14],
+    ['analog-3','2y0a21',48,14],
+    ['analog-4','2y0a21',18,14]
+]
 DISPLAY_ROTATED         = True                                                  #Set to true if the OLED module is rotated to flip image
 SENSOR_PORT_LIST        = [3,4,5]                                               #The I2C ports which will be scanned for sensors
 
@@ -39,7 +45,7 @@ ADC_BUS                 = 9                                                     
 ADC_ADDRESS             = 0x48                                                  #The I2C address for the ADS7830
 MOTORS_BUS              = 7
 ARDUINO_BUS             = 10
-ARDUINO_ADDRESS         = 0x57                    
+ARDUINO_ADDRESS         = 0x57
 MOTOR1_ADDRESS          = 0x60
 MOTOR2_ADDRESS          = 0x62
 

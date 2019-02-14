@@ -1,0 +1,27 @@
+/*
+ * See: https://fonts.google.com/license/googlerestricted
+ */
+@font-face {
+  font-family: 'Product Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Product Sans Italic'), local('ProductSans-Italic'), url(https://fonts.gstatic.com/s/productsans/v9/pxidypQkot1TnFhsFMOfGShVEueMaEk.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Product Sans';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Product Sans Bold Italic'), local('ProductSans-BoldItalic'), url(https://fonts.gstatic.com/s/productsans/v9/pxieypQkot1TnFhsFMOfGShVEu83TVlDim4.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Product Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Product Sans'), local('ProductSans-Regular'), url(https://fonts.gstatic.com/s/productsans/v9/pxiDypQkot1TnFhsFMOfGShVF9eL.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Product Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Product Sans Bold'), local('ProductSans-Bold'), url(https://fonts.gstatic.com/s/productsans/v9/pxicypQkot1TnFhsFMOfGShdrPKbT2lE.ttf) format('truetype');
+}

@@ -1,0 +1,28 @@
+body{
+    font-size: 1.5em;
+    line-height: 1.6;
+    font-weight: 400;
+    font-family: Raleway,HelveticaNeue,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: #222;
+}
+
+.banner {
+    height: 75px;
+    margin: 0px -10px 10px;
+    background-color: rgb(66, 196, 247);
+    border-radius: 2px;
+}
+
+.banner h2{
+    color: white;
+    padding-top: 10px;
+    margin-left: 2%;
+    display: inline-block;
+}
+
+.banner Img{
+    position: relative;
+    float: right;
+    right: 10px;
+    height: 75px;
+}

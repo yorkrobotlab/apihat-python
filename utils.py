@@ -13,17 +13,17 @@ def decode_time(epoch_seconds):
 def dynamic_values_to_csv():
     update_cpu_load()
     mem = get_mem_usage()
-    return "%2.1f,%2.1f,%2.1f,%2.1f,%2.1f,%d,%2.1f,%2.1f,%2.1f,%d,%d,%2.2f,%2.2f" % (cpu_percent_load_array[0][4]*100,cpu_percent_load_array[1][4]*100,cpu_percent_load_array[2][4]*100,cpu_percent_load_array[3][4]*100,cpu_percent_load_array[4][4]*100,get_arm_clockspeed(),get_pcb_temp(),get_cpu_temp(),get_gpu_temp(),mem[0],mem[1],mem[2],get_battery_voltage())
+    return "%2.1f,%2.1f,%2.1f,%2.1f,%2.1f,%d,%2.1f,%2.1f,%2.1f,%d,%d,%2.2f,%2.2f,%d,%d,%d,%d" % (cpu_percent_load_array[0][4]*100,cpu_percent_load_array[1][4]*100,cpu_percent_load_array[2][4]*100,cpu_percent_load_array[3][4]*100,cpu_percent_load_array[4][4]*100,get_arm_clockspeed(),get_pcb_temp(),get_cpu_temp(),get_gpu_temp(),mem[0],mem[1],mem[2],get_battery_voltage(),sensors.read_adc(0),sensors.read_adc(1),sensors.read_adc(2),sensors.read_adc(3))
 
 def dynamic_values_to_csv_header():
-    return "total-cpu-load,cpu-0-load,cpu-1-load,cpu-2-load,cpu-3-load,clock-speed,pcb-temp,cpu-temp,gpu-temp,memory-used,memory-total,memory-used-pct,battery-voltage"
+    return "total-cpu-load,cpu-0-load,cpu-1-load,cpu-2-load,cpu-3-load,clock-speed,pcb-temp,cpu-temp,gpu-temp,memory-used,memory-total,memory-used-pct,battery-voltage,analog-1,analog-2,analog-3,analog-4"
 
 def get_battery_voltage():
     return sensors.read_voltage()
 
 def get_pcb_temp():
     return sensors.read_pcb_temp()
-    
+
 def get_ip():
     cmd = "hostname -I | cut -d\' \' -f1"
     IP = subprocess.check_output(cmd, shell = True ).strip()

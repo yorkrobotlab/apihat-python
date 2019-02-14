@@ -19,7 +19,7 @@ from queue import *
 
 data_poll_period = settings.default_poll_period    # Default sensor\system status polling period in seconds
 
-logging.info('YRL028 Core Functions Python File - Ver 0.01.190209')
+logging.info('YRL028 Core Functions Python File - Ver 0.01.190214')
 
 demo_mode_enabled = False
 demo_mode_active = False
