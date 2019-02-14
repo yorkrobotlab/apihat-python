@@ -4,10 +4,10 @@ from dash.dependencies import Input, Output
 import dash_daq as daq
 import settings
 import pickle
-import base64
+#import base64
 
 from app import app
-from apps import system_app, control_app, sensors_app, camera_app, analog_app
+from apps import system_app, control_app, sensors_app, camera_app, analog_app, robot_app
 
 app.index_string = '''
 <!DOCTYPE html>
@@ -75,13 +75,14 @@ root_layout = html.Div(
 
 app.layout = root_layout
 
-tab_list = [
+tab_list = []
+if(settings.ENABLE_ROBOT_TAB): tab_list = [dcc.Tab(label='Robot', value='robot-tab', style=tab_style, selected_style=tab_selected_style)]
+tab_list.extend([
     dcc.Tab(label='System', value='system-tab', style=tab_style, selected_style=tab_selected_style),
     dcc.Tab(label='Control', value='control-tab', style=tab_style, selected_style=tab_selected_style),
     dcc.Tab(label='Analogue', value='analog-tab', style=tab_style, selected_style=tab_selected_style),
     dcc.Tab(label='Camera', value='camera-tab', style=tab_style, selected_style=tab_selected_style)
-]
-
+])
 tab_index_list = []
 for sensor in import_sensor_list:
     tab_index = "%s" % sensor[0]
@@ -90,8 +91,8 @@ for sensor in import_sensor_list:
     if int(sensor[0]) == 5: tab_label="Board Sensor"
     tab_list.append(dcc.Tab(label=tab_label, value=tab_index, style=tab_style, selected_style=tab_selected_style))
 
-image_filename = "images/uoy-logo.png"
-encoded_image = base64.b64encode(open(image_filename,'rb').read())
+#image_filename = "images/uoy-logo.png"
+#encoded_image = base64.b64encode(open(image_filename,'rb').read())             # Now using assets folder
 app.layout = html.Div(
     [
         html.Div(
@@ -101,7 +102,7 @@ app.layout = html.Div(
                 html.H2("YRL028 APIHAT"),
                 html.A(
                     #html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode())),
-                    html.Img(src='/assets/uoy-logo.png')
+                    html.Img(src='assets/uoy-logo.png')
                 ),
             ],
             className="banner",
@@ -130,6 +131,7 @@ def render_content(tab):
     elif tab == 'control-tab': return control_app.layout
     elif tab == 'camera-tab': return camera_app.layout
     elif tab == 'analog-tab': return analog_app.layout
+    elif tab == 'robot-tab': return robot_app.layout
     else:
         for c, index in enumerate(tab_index_list):
             if tab == index: return sensor_tab_list[c].get_layout(import_sensor_list[c][1],"%s%s.csv" % (settings.sensor_datafilename,index),index,import_sensor_list[c][2])

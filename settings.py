@@ -11,12 +11,16 @@ import logging,sys
 LOGGING_MODE = logging.INFO
 #LOGGING_MODE = logging.DEBUG
 
+ENABLE_ROBOT_TAB = True                                                         #Enable if a robot sensor model and motor model is defined to enable components in DASH server
+# Define the robot sensors for DASH server, list of list of 4 elements: sensor ID, sensor type, theta, +-view angle
 ROBOT_SENSOR_MODEL = [
     ['analog-1','2y0a21',312,14],
     ['analog-2','2y0a21',342,14],
     ['analog-3','2y0a21',48,14],
     ['analog-4','2y0a21',18,14]
 ]
+
+
 DISPLAY_ROTATED         = True                                                  #Set to true if the OLED module is rotated to flip image
 SENSOR_PORT_LIST        = [3,4,5]                                               #The I2C ports which will be scanned for sensors
 
@@ -32,8 +36,6 @@ BATTERY_SHUTDOWN_VOLTAGE = 8.9
 ENABLE_DEMO_MODE        = False
 ENABLE_STATS_MODE       = False
 ENABLE_AUTOSENSE_MODE   = True
-
-
 
 # The following are things you are less likely to want to change on the YRL028 setup...
 OLED_BUS                = 8                                                     #The bus which the OLED module is attached to [i2c_8 on YRL028]
