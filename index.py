@@ -53,6 +53,7 @@ with open("%slist.pickle" % settings.sensor_datafilename, "rb") as pickler:
 sensor_tab_list = []
 for sensor in import_sensor_list:
     sensor_tab_list.append(sensors_app)
+#print (sensor_tab_list)
 #print (import_sensor_list)
 
 root_layout = html.Div(
@@ -134,7 +135,9 @@ def render_content(tab):
     elif tab == 'robot-tab': return robot_app.layout
     else:
         for c, index in enumerate(tab_index_list):
-            if tab == index: return sensor_tab_list[c].get_layout(import_sensor_list[c][1],"%s%s.csv" % (settings.sensor_datafilename,index),index,import_sensor_list[c][2])
+            if tab == index:
+                print ("Returning layout for sensor tab")
+                return sensor_tab_list[c].get_layout(import_sensor_list[c][1],"%s%s.csv" % (settings.sensor_datafilename,index),index,import_sensor_list[c][2])
 
 def index_run():
     app.run_server(host='0.0.0.0',port=8082,debug=True)

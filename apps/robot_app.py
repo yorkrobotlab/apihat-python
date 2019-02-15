@@ -15,23 +15,27 @@ from app import app
 
 flex_style = {"display": "flex","justify-content": "center-top","align-items": "center-top"}
 border_style = {"border-radius": "5px","border-width": "5px","border": "1px solid rgb(216, 216, 216)","padding": "4px 10px 10px 10px","margin" : "4px 4px"}
-block_style = {"textAlign": "center", "width": "25%"}
+button_style = {"width": "33%"}
 
 def create_div(title,body):
     return html.Div([html.H6(title),html.Div(body,style=flex_style)],style=border_style)
 
 layout = html.Div([
     create_div('Drive Control',[
-        html.Button('Forwards', id='forwards-button'),
-        html.Div(id='forwards-button-output-div'),
-        html.Button('Backwards', id='backwards-button'),
-        html.Div(id='backwards-button-output-div'),
-        html.Button('Left Turn', id='left-button'),
-        html.Div(id='left-button-output-div'),
-        html.Button('Right Turn', id='right-button'),
-        html.Div(id='right-button-output-div'),
-        html.Button('Stop', id='dc-stop-button'),
-        html.Div(id='stop-button-output-div'),
+        html.Div([
+            html.Div([html.Div(style=button_style),html.Button('Forwards', id='forwards-button', style=button_style),html.Div(style=button_style)],style=flex_style),
+            html.Div([
+                html.Button('Left Turn', id='left-button',style=button_style),
+                html.Button('Stop', id='dc-stop-button',style=button_style),
+                html.Button('Right Turn', id='right-button',style=button_style),
+            ]),
+            html.Div([html.Div(style=button_style),html.Button('Backwards', id='backwards-button', style=button_style),html.Div(style=button_style)],style=flex_style),
+            html.Div(id='forwards-button-output-div'),
+            html.Div(id='right-button-output-div'),
+            html.Div(id='left-button-output-div'),
+            html.Div(id='stop-button-output-div'),
+            html.Div(id='backwards-button-output-div'),
+        ], style = {"width":"75%"}),
         daq.Slider(id="motor-speed-slider",value=20,min=0,max=100,handleLabel={"showCurrentValue":True,"label":"SPEED"}),
 
     ]),
