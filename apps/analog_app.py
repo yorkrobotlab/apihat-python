@@ -41,13 +41,17 @@ def generate_range_data(current_values):
 
 range_layout = go.Layout(
     polar = dict(
+        sector = [0,180],
         radialaxis = dict(
             visible = True,
             range = [0,80]
-        )
+        ),
+        angularaxis = dict(
+            rotation = 90,
+            direction = "clockwise",
+        ),
     ),
     showlegend = False,
-    orientation=180
 )
 
 border_style = {"border-radius": "5px","border-width": "5px","border": "1px solid rgb(216, 216, 216)","padding": "4px 10px 10px 10px","margin" : "4px 4px"}
@@ -55,9 +59,9 @@ flex_style = {"display": "flex","justify-content": "center-top","align-items": "
 block_style = {"textAlign": "center", "width": "25%"}
 
 layout = html.Div([
-    create_div("Values",[
+    create_div("Values",[html.Div([
         daq.BooleanSwitch(label="Distances",id='distances-switch'),
-        html.Div(id='analog-raw-div')
+        html.Div(id='analog-raw-div')])
     ]),
 
     dcc.Interval(
@@ -102,7 +106,7 @@ def update_values(n_intervals,distance_mode):
             html.Div([
                 dcc.Graph(
                     figure=range_figure,
-                    style={'height': 600},
+                    style={'height': 580},
                     id='range-graph'
                 )
             ]),

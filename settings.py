@@ -14,10 +14,10 @@ LOGGING_MODE = logging.INFO
 ENABLE_ROBOT_TAB = True                                                         #Enable if a robot sensor model and motor model is defined to enable components in DASH server
 # Define the robot sensors for DASH server, list of list of 4 elements: sensor ID, sensor type, theta, +-view angle
 ROBOT_SENSOR_MODEL = [
-    ['analog-1','2y0a21',312,14],
-    ['analog-2','2y0a21',342,14],
-    ['analog-3','2y0a21',48,14],
-    ['analog-4','2y0a21',18,14]
+    ['analog-1','2y0a21',48,14],
+    ['analog-2','2y0a21',18,14],
+    ['analog-3','2y0a21',312,14],
+    ['analog-4','2y0a21',342,14]
 ]
 
 
