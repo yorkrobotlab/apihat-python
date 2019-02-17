@@ -9,9 +9,11 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_daq as daq
 from dash.dependencies import Input, Output, State
-import led, speech, audio, patterns, display, motors
+import led, speech, audio, patterns, display, motors, settings, utils, os
 
 from app import app
+
+audio.start_audio_thread()
 
 flex_style = {"display": "flex","justify-content": "center-top","align-items": "center-top"}
 border_style = {"border-radius": "5px","border-width": "5px","border": "1px solid rgb(216, 216, 216)","padding": "4px 10px 10px 10px","margin" : "4px 4px"}
@@ -21,6 +23,20 @@ def create_div(title,body):
     return html.Div([html.H6(title),html.Div(body,style=flex_style)],style=border_style)
 
 layout = html.Div([
+    create_div('Audio',[
+        html.Div([
+            html.Div([
+                html.H6("Volume"),
+                daq.Slider(id="volume-slider",value=settings.AUDIO_VOLUME,min=0,max=100,updatemode="drag",handleLabel={"showCurrentValue":True,"label":"SPEED"}),
+            ]),
+            dcc.Dropdown(
+                id='audio-file-dropdown',
+                options=[{'label':i,'value':str(count)} for count,i in enumerate(utils.get_audio_filelist())]
+            ),
+            html.Div(id='playback-div'),
+            html.Div(id='volume-callback-div'),
+        ]),
+    ]),
     create_div('Text to Speech',[
         dcc.Input(placeholder='Text to say...',type='text',value='',id=('speech-text-field')),
         html.Button('Speak', id='speak-button'),
@@ -60,6 +76,23 @@ layout = html.Div([
         html.Div(id='display-callback-div')
     ]),
 ])
+
+#Audio callbacks
+@app.callback(
+    Output('volume-callback-div', 'children'),
+    [Input('volume-slider', 'value')])
+def volume_callback(v):
+    audio.set_volume(v)
+    return(html.P("Setting volume to %d" % (v)))
+
+@app.callback(
+    Output('playback-div', 'children'),
+    [Input('audio-file-dropdown', 'value')])
+def audio_callback(value):
+    if(value==None): return('')
+    audio.play_audio_file(os.path.join(settings.AUDIO_FILEPATH,utils.get_audio_filelist()[int(value)]))
+    return html.P("Playing audio file %s" % (utils.get_audio_filelist()[int(value)]))
+
 
 #Motor control callbacks
 @app.callback(

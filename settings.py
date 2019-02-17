@@ -7,10 +7,16 @@
 
 import logging,sys
 
+VERSION_STRING="0.01.190217"
 # Set the Python logging level; recommend INFO for deployment and DEBUG for debugging
 LOGGING_MODE = logging.INFO
 #LOGGING_MODE = logging.DEBUG
 
+ENABLE_PROGRAMS = True
+DEFAULT_PROGRAM = None
+AUDIO_VOLUME = 90
+AUDIO_FILEPATH = "wav"
+PROGRAM_FILEPATH = "user_programs"
 ENABLE_ROBOT_TAB = True                                                         #Enable if a robot sensor model and motor model is defined to enable components in DASH server
 # Define the robot sensors for DASH server, list of list of 4 elements: sensor ID, sensor type, theta, +-view angle
 ROBOT_SENSOR_MODEL = [
@@ -81,6 +87,10 @@ NOISE_FLOOR = 4000
 # The locations for the sensor and system file logs
 system_datafilename="/ramdisk/system.csv"
 sensor_datafilename="/ramdisk/sensor"
+program_request_filename="/ramdisk/progrequest"
+program_info_filename="/ramdisk/proginfo"
+program_state_filename="/ramdisk/progstate"
+
 
 def init():
     global use_built_in_dip_functions

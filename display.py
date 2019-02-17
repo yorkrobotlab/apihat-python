@@ -28,12 +28,15 @@ width = 128
 height = 32
 draw_image = Image.new('1', (width, height))
 
+# Clear display.
+def clear():
+    disp.clear()
+    disp.display()
+
 # Initialize library.
 def init_display():
     disp.begin()
-    # Clear display.
-    disp.clear()
-    disp.display()
+    clear()
 
 # Send the image to the display.  image is a PIL image, 128x32 pixels.
 def display_image(image):
@@ -62,6 +65,7 @@ def one_line_text(text):
     draw.text((0,4),text,font=large_font,fill=255)
     display_image(draw_image)
 
+# Display one lins of text; if the line is longer than 14 characters will shrink font + wrap (64 characters max)
 def one_line_text_wrapped(text):
     draw = ImageDraw.Draw(draw_image)
     draw.rectangle((0,0,width,height), outline=0, fill=0)

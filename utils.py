@@ -5,7 +5,29 @@
 #
 # James Hilder, York Robotics Laboratory, Feb 2019
 
-import subprocess, os, timeit, time, datetime, sensors
+import subprocess, os, timeit, time, datetime, sensors, settings, logging
+
+def get_program_filelist():
+    filelist =  [f[:-10] for f in os.listdir(settings.PROGRAM_FILEPATH) if (os.path.isfile(os.path.join(settings.PROGRAM_FILEPATH, f)) and f.endswith('_apihat.py'))]
+    logging.debug(filelist)
+    return filelist
+
+def write_prog_state_info(message):
+    f= open(settings.program_info_filename,"w+")
+    f.write(message)
+    f.close()
+
+def request_program(index):
+    filename = get_program_filelist()[int(index)] + "_apihat"
+    f= open(settings.program_request_filename,"w+")
+    f.write(filename)
+    f.close()
+    logging.info("Wrote %s to %s" % (filename,settings.program_request_filename))
+
+def get_audio_filelist():
+    filelist =  [f for f in os.listdir(settings.AUDIO_FILEPATH) if (os.path.isfile(os.path.join(settings.AUDIO_FILEPATH, f)))]
+    logging.debug(filelist)
+    return filelist
 
 def decode_time(epoch_seconds):
     return datetime.datetime.fromtimestamp(epoch_seconds).strftime('%Y-%m-%d %H:%M:%S.%f')

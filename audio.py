@@ -5,7 +5,7 @@
 #
 # James Hilder, York Robotics Laboratory, Feb 2019
 
-import RPi.GPIO as GPIO, threading, logging, subprocess, os, time
+import RPi.GPIO as GPIO, threading, logging, subprocess, os, time, settings
 from queue import *
 
 AUDIO_ON = 16   #Audio Enable attached to GPIO 16
@@ -40,10 +40,16 @@ def audio_queue_thread():
       mute()
     time.sleep(0.01)
 
-def setup_audio():
-  subprocess.call(["amixer","-q","sset","PCM,0",audio_volume_string])  #Set audio_volume_string to 96 for 100%
-  mute()
+def set_volume(volume):
+  subprocess.call(["amixer","-q","sset","PCM,0","%d%%" % (volume)])  #Set audio_volume_string to 96 for 100%
+
+def start_audio_thread():
   audio_thread.start()
+
+def setup_audio():
+  set_volume(settings.AUDIO_VOLUME)
+  mute()
+  start_audio_thread()
 
 def kill_audio():
   global audio_killed

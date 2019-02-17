@@ -11,16 +11,23 @@ import settings
 
 settings.init()
 
-import RPi.GPIO as GPIO, threading, subprocess, time, pickle
+import RPi.GPIO as GPIO, threading, subprocess, time, pickle, os
 import display, led, demo, audio, speech, utils, sensors, switch                #YRL028 Imports
 from threading import Timer
 from subprocess import call
 from queue import *
+from user_programs import *
 
 data_poll_period = settings.default_poll_period    # Default sensor\system status polling period in seconds
 
-logging.info('YRL028 Core Functions Python File - Ver 0.01.190214')
+logging.info("YRL028 Core Functions Python File - Ver  %s" % (settings.VERSION_STRING))
 
+PROG_NOT_RUNNING = 0
+PROG_INITIALISED = 1
+PROG_RUNNING     = 2
+PROG_PAUSED      = 3
+program_name = None
+program_state = PROG_NOT_RUNNING
 demo_mode_enabled = False
 demo_mode_active = False
 stats_mode_enabled = False
@@ -212,9 +219,57 @@ def shutdown():
     time.sleep(0.5)
     os.system("shutdown")
 
+def initialise_user_program():
+    global program_state
+    program_state = PROG_RUNNING
+    eval(program_name+".initialise_program()")
+    utils.write_prog_state_info("Program %s started" % program_name)
+
+def pause_user_program():
+    global program_state
+    if(program_state == PROG_RUNNING):
+        program_state = PROG_PAUSED
+        eval(program_name+".set_display('PAUSED')")
+        utils.write_prog_state_info("Program %s paused" % program_name)
+    elif(program_state == PROG_PAUSED):
+        program_state = PROG_RUNNING
+        eval(program_name+".set_display('')")
+        utils.write_prog_state_info("Program %s resumed" % program_name)
+
+
+def stop_user_program():
+    global program_state
+    program_state = PROG_NOT_RUNNING
+    eval(program_name+".stop_program()")
+    utils.write_prog_state_info("Program %s stopped" % program_name)
+
+def program_loop():
+    global program_name, program_state
+    #Check if we have a program request filename
+    if(os.path.isfile(settings.program_request_filename)):
+        #File exists: First stop currently running program (if one exists).  Then read the file, delete it and set state to NOT_RUNNING
+        if(program_state > PROG_NOT_RUNNING): stop_user_program()
+        with open(settings.program_request_filename, 'r') as req_file: program_name = (req_file.read())
+        logging.info("New program request: %s " % program_name)
+        program_state = PROG_NOT_RUNNING
+        utils.write_prog_state_info("Program %s requested" % program_name)
+        os.remove(settings.program_request_filename)
+    else:
+        if(os.path.isfile(settings.program_state_filename)):
+            #State file exists: Read then delete file
+            with open(settings.program_state_filename, 'r') as req_file: state = (req_file.read())
+            if(state == "START" and program_name != None): initialise_user_program()
+            if(state == "STOP" and program_name != None): stop_user_program()
+            if(state == "PAUSE" and program_name != None): pause_user_program()
+            os.remove(settings.program_state_filename)
+        #Check if we have a program state request filename etc...
+        if(program_state == PROG_RUNNING): eval(program_name+".program_loop()")
+
+
 def handler_loop():
-  global update_stats, update_sensors, update_battery_monitor, battery_warning_state
-  while handler_running:#
+  global update_stats, update_sensors, update_battery_monitor, battery_warning_state, program_name, program_state
+  while handler_running:
+    if settings.ENABLE_PROGRAMS: program_loop()
     if switch_interrupt:
       if has_switch: switch_interrupt_handler()
     if update_stats:
