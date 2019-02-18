@@ -30,7 +30,7 @@ layout = html.Div([
             ],style=flex_style),
             dcc.Interval(
                 id='raspistill-interval-component',
-                interval=0.5*1000, # in milliseconds
+                interval=0.6*1000, # in milliseconds
                 n_intervals=0
             ),
             html.Div(id='image-callback-div',style=flex_style),
@@ -45,7 +45,7 @@ layout = html.Div([
     [dash.dependencies.Input('raspistill-interval-component', 'n_intervals')])
 def update_image_src(n):
     try:
-        encoded_image = base64.b64encode(open("/ramdisk/raspistill.png", 'rb').read())
+        encoded_image = base64.b64encode(open("/ramdisk/image.png", 'rb').read())
     except OSError:
         return "No raspistill image to display."
     return html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()))
@@ -55,7 +55,7 @@ def update_image_src(n):
     [Input('start-raspistill-button', 'n_clicks')])
 def start_raspistill_callback(c):
     if c == None: return ''
-    subprocess.Popen(["raspistill","-tl","500","-n","-o","/ramdisk/raspistill.png","-t","60000","-w","800","-h","600","-bm"])
+    subprocess.Popen(["raspistill","-tl","500","-n","-o","/ramdisk/image.png","-t","60000","-w","800","-h","600","-bm"])
     return ''
 
 #Speech to text callback
