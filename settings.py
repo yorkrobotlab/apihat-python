@@ -90,6 +90,7 @@ sensor_datafilename="/ramdisk/sensor"
 program_request_filename="/ramdisk/progrequest"
 program_info_filename="/ramdisk/proginfo"
 program_state_filename="/ramdisk/progstate"
+camera_request_filename="/ramdisk/camerarequest"
 
 
 def init():

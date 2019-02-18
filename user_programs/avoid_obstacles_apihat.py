@@ -31,9 +31,9 @@ def program_loop():
         min_distance = 100
         distances = []
         for s_def in settings.ROBOT_SENSOR_MODEL:
-            distance = sensors.get_distance(int(current_values[s_def[0]]),s_def[1])
+            distance = sensors.get_distance(sensors.read_adc(s_def[0]),s_def[1])
             distances.append[s_def[2],distance]
-            
+
 def stop_program():
     #Clear the display, turn off LEDs, stop the motors
     display.clear()

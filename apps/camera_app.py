@@ -10,9 +10,11 @@ import dash_html_components as html
 import dash_daq as daq
 import base64
 from dash.dependencies import Input, Output, State
-import led, speech, audio, patterns, display, motors, subprocess
+import led, speech, audio, patterns, display, motors, subprocess, settings
 
 from app import app
+
+opencv_filter_modes = ["No Filter","Canny Edge Detection","Hough Line Detection","Hough Circle Detection","ORB Keypoint Detection","Blob Detection","ARUCO Tag Detection"]
 
 flex_style = {"display": "flex","justify-content": "center-top","align-items": "center-top"}
 border_style = {"border-radius": "5px","border-width": "5px","border": "1px solid rgb(216, 216, 216)","padding": "4px 10px 10px 10px","margin" : "4px 4px"}
@@ -22,23 +24,41 @@ def create_div(title,body):
     return html.Div([html.H6(title),html.Div(body,style=flex_style)],style=border_style)
 
 layout = html.Div([
-    create_div('Raspistill',[
+    create_div('Still Image Processing',[
         html.Div([
+            dcc.Dropdown(
+                id='camera-filter-dropdown',
+                options=[{'label':i,'value':str(count)} for count,i in enumerate(opencv_filter_modes)]
+            ),
             html.Div([
+                html.Button('Start camera server',id='start-camera-button'),
+                html.Button('Stop camera server',id='stop-camera-button'),
                 html.Button('Start raspistill', id='start-raspistill-button'),
                 html.Button('Kill raspistill', id='kill-raspistill-button'),
             ],style=flex_style),
             dcc.Interval(
                 id='raspistill-interval-component',
-                interval=0.6*1000, # in milliseconds
+                interval=0.8*1000, # in milliseconds
                 n_intervals=0
             ),
             html.Div(id='image-callback-div',style=flex_style),
+            html.Div(id='camera-mode-div'),
+            html.Div(id='start-camera-button-callback-div'),
+            html.Div(id='stop-camera-button-callback-div'),
             html.Div(id='startbutton-callback-div'),
             html.Div(id='killbutton-callback-div'),
         ]),
     ]),
 ])
+
+@app.callback(
+    Output('camera-mode-div', 'children'),
+    [Input('camera-filter-dropdown', 'value')])
+def filter_mode_callback(value):
+    if(value==None): return('')
+    with open(settings.camera_request_filename, 'w+') as camera_file: camera_file.write("MODE %s" % value)
+    return ('')
+
 
 @app.callback(
     dash.dependencies.Output('image-callback-div', 'children'),
@@ -47,8 +67,25 @@ def update_image_src(n):
     try:
         encoded_image = base64.b64encode(open("/ramdisk/image.png", 'rb').read())
     except OSError:
-        return "No raspistill image to display."
+        return "No camera image to display."
     return html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()))
+
+@app.callback(
+    Output('start-camera-button-callback-div', 'children'),
+    [Input('start-camera-button', 'n_clicks')])
+def start_camera_callback(c):
+    if c == None: return ''
+    with open(settings.camera_request_filename, 'w+') as camera_file: camera_file.write("START")
+    return ''
+
+@app.callback(
+    Output('stop-camera-button-callback-div', 'children'),
+    [Input('stop-camera-button', 'n_clicks')])
+def stop_camera_callback(c):
+    if c == None: return ''
+    with open(settings.camera_request_filename, 'w+') as camera_file: camera_file.write("STOP")
+    return ''
+
 
 @app.callback(
     Output('startbutton-callback-div', 'children'),
