@@ -15,6 +15,7 @@ void i2c_request_event(void);
 void i2c_receive_event(int howMany);
 void check_serial_for_data(void);
 void process_serial_data(void);
+void process_i2c_data(void);
 boolean parse_integer_from_serial(int low_limit, int high_limit);
 
 #endif

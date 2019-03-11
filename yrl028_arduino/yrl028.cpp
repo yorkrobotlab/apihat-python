@@ -103,6 +103,7 @@ void yrl028_loop() {
   //Check for serial data
   check_serial_for_data();
   process_serial_data();
+  process_i2c_data();
   
   unsigned long currentMillis = millis() - startMillis;
   if(logSerialData){
