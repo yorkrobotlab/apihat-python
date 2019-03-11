@@ -12,6 +12,10 @@ import sensors, settings
 import pandas as pd
 import ast
 from app import app
+import css
+flex_style =css.flex_style
+border_style = css.border_style
+block_style = css.block_style
 
 def create_div(title,body):
     return html.Div([
@@ -54,9 +58,7 @@ range_layout = go.Layout(
     showlegend = False,
 )
 
-border_style = {"border-radius": "5px","border-width": "5px","border": "1px solid rgb(216, 216, 216)","padding": "4px 10px 10px 10px","margin" : "4px 4px"}
-flex_style = {"display": "flex","justify-content": "center-top","align-items": "center-top"}
-block_style = {"textAlign": "center", "width": "25%"}
+
 
 layout = html.Div([
     create_div("Values",[html.Div([

@@ -13,8 +13,10 @@ import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 
 from app import app
-
-border_style = {"border-radius": "5px","border-width": "5px","border": "1px solid rgb(216, 216, 216)","padding": "4px 10px 10px 10px","margin" : "4px 4px"}
+import css
+flex_style =css.flex_style
+border_style = css.border_style
+block_style = css.block_style
 
 window_size = 120
 
@@ -141,10 +143,7 @@ def update_values(value,n_intervals):
                     style={"textAlign": "center", "width": "23%"},
                     ),
             ],
-            style={ "display": "flex",
-                    "justify-content": "center-top",
-                    "align-items": "center-top",
-            },),
+            style=flex_style,),
             html.Div('Last response time: {}'.format(utils.decode_time(system_time).rstrip("0"))),
         ])
     except IndexError:

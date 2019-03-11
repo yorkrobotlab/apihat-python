@@ -8,14 +8,16 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_daq as daq
+from app import app
 from dash.dependencies import Input, Output, State
 import led, speech, audio, patterns, display, motors, utils, settings
 from user_programs import *
 
 from app import app
-
-flex_style = {"display": "flex","justify-content": "center-top","align-items": "center-top"}
-border_style = {"border-radius": "5px","border-width": "5px","border": "1px solid rgb(216, 216, 216)","padding": "4px 10px 10px 10px","margin" : "4px 4px"}
+import css
+flex_style =css.flex_style
+border_style = css.border_style
+block_style = css.block_style
 button_style = {"width": "33%"}
 
 def create_div(title,body):

@@ -11,14 +11,14 @@ import dash_daq as daq
 import base64
 from dash.dependencies import Input, Output, State
 import led, speech, audio, patterns, display, motors, subprocess, settings
-
 from app import app
 
 opencv_filter_modes = ["No Filter","Canny Edge Detection","Hough Line Detection","Hough Circle Detection","ORB Keypoint Detection","Blob Detection","ARUCO Tag Detection"]
 
-flex_style = {"display": "flex","justify-content": "center-top","align-items": "center-top"}
-border_style = {"border-radius": "5px","border-width": "5px","border": "1px solid rgb(216, 216, 216)","padding": "4px 10px 10px 10px","margin" : "4px 4px"}
-block_style = {"textAlign": "center", "width": "25%"}
+import css
+flex_style =css.flex_style
+border_style = css.border_style
+block_style = css.block_style
 
 def create_div(title,body):
     return html.Div([html.H6(title),html.Div(body,style=flex_style)],style=border_style)

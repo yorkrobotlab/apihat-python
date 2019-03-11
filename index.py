@@ -24,13 +24,13 @@ app.index_string = '''
             {%config%}
             {%scripts%}
         </footer>
-        <div>(C) York Robotics Laboratory, University of York, 2019</div>
+        <div>(C) James Hilder, York Robotics Laboratory, University of York, Feb 2019</div>
     </body>
 </html>
 '''
 
 tabs_styles = {
-    'height': '44px'
+    'height': '36px'
 }
 
 tab_style = {
