@@ -1,8 +1,8 @@
-# YRL028 - APIHAT - Dash-DAQ Server Version 0.1
+# YRL028 - APIHAT - Dash-DAQ Server Version 0.2
 #
 # Robot Tab - Visible if ENABLE_ROBOT_TAB=True in settings.py
 #
-# James Hilder, York Robotics Laboratory, Feb 2019
+# James Hilder, York Robotics Laboratory, Mar 2019
 
 import dash
 import dash_core_components as dcc

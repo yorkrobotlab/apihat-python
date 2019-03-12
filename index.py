@@ -1,13 +1,20 @@
+#!/usr/bin/python
+# YRL028 - APIHAT - Python 3 API Version 0.2
+#
+# Dash-DAQ Server Index Page Generator
+#
+# James Hilder, York Robotics Laboratory, Mar 2019
+
+
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 import dash_daq as daq
 import settings
 import pickle
-#import base64
 
 from app import app
-from apps import system_app, control_app, sensors_app, camera_app, analog_app, robot_app
+from apps import system_app, arduino_app, control_app, sensors_app, camera_app, analog_app, robot_app
 
 app.index_string = '''
 <!DOCTYPE html>
@@ -24,7 +31,7 @@ app.index_string = '''
             {%config%}
             {%scripts%}
         </footer>
-        <div>(C) James Hilder, York Robotics Laboratory, University of York, Feb 2019</div>
+        <div>(C) James Hilder, York Robotics Laboratory, University of York, Mar 2019</div>
     </body>
 </html>
 '''
@@ -53,8 +60,6 @@ with open("%slist.pickle" % settings.sensor_datafilename, "rb") as pickler:
 sensor_tab_list = []
 for sensor in import_sensor_list:
     sensor_tab_list.append(sensors_app)
-#print (sensor_tab_list)
-#print (import_sensor_list)
 
 root_layout = html.Div(
     [
@@ -81,6 +86,7 @@ if(settings.ENABLE_ROBOT_TAB): tab_list = [dcc.Tab(label='Robot', value='robot-t
 tab_list.extend([
     dcc.Tab(label='System', value='system-tab', style=tab_style, selected_style=tab_selected_style),
     dcc.Tab(label='Control', value='control-tab', style=tab_style, selected_style=tab_selected_style),
+    dcc.Tab(label='Arduino', value='arduino-tab', style=tab_style, selected_style=tab_selected_style),
     dcc.Tab(label='Analogue', value='analog-tab', style=tab_style, selected_style=tab_selected_style),
     dcc.Tab(label='Camera', value='camera-tab', style=tab_style, selected_style=tab_selected_style)
 ])
@@ -92,17 +98,14 @@ for sensor in import_sensor_list:
     if int(sensor[0]) == 5: tab_label="Board Sensor"
     tab_list.append(dcc.Tab(label=tab_label, value=tab_index, style=tab_style, selected_style=tab_selected_style))
 
-#image_filename = "images/uoy-logo.png"
-#encoded_image = base64.b64encode(open(image_filename,'rb').read())             # Now using assets folder
 app.layout = html.Div(
     [
         html.Div(
             id="container",
-            style={"background-color": "#20304C"},
+            style={"background-color": "#e26618"},
             children=[
                 html.H2("YRL028 APIHAT"),
                 html.A(
-                    #html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode())),
                     html.Img(src='assets/uoy-logo.png')
                 ),
             ],
@@ -130,6 +133,7 @@ app.config["suppress_callback_exceptions"] = True
 def render_content(tab):
     if tab == 'system-tab': return system_app.layout
     elif tab == 'control-tab': return control_app.layout
+    elif tab == 'arduino-tab': return arduino_app.layout
     elif tab == 'camera-tab': return camera_app.layout
     elif tab == 'analog-tab': return analog_app.layout
     elif tab == 'robot-tab': return robot_app.layout

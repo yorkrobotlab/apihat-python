@@ -34,5 +34,6 @@ void stop_motors(void);
 void setup_motors(void);
 void enc_1_ISR(void);
 void enc_2_ISR(void);
+void reset_encoders(void);
 
 #endif

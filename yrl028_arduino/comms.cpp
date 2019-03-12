@@ -74,6 +74,9 @@ void i2c_request_event() {
       case 0: Wire.write("yrl028"); break;
       case 1: write_long(enc_1_count); break;
       case 2: write_long(enc_2_count); break;
+      case 3: write_long(enc_1_cumulative); break;
+      case 4: write_long(enc_2_cumulative); break;
+      
     }
   }
 }
@@ -121,8 +124,13 @@ void process_serial_data() {
     {
       case 'i': Serial.print("Left:");
         Serial.print(enc_1_count);
-        Serial.print("  Right:");
+        Serial.print(" [");
+        Serial.print(enc_1_cumulative);
+        Serial.print("]  Right:");
         Serial.print(enc_2_count);
+        Serial.print(" [");
+        Serial.print(enc_2_cumulative);
+        Serial.println("]");
         break;
       case 'l': if (parse_integer_from_serial(-255, 255)) set_motor1_speed(parsed_value); else ok = false; break;
       case 'r': if (parse_integer_from_serial(-255, 255)) set_motor2_speed(parsed_value); else ok = false; break;
@@ -136,7 +144,7 @@ void process_serial_data() {
       case 't': if (parse_integer_from_serial(30, 10000)) tone(buzzer, parsed_value); else ok = false; break;
       case 'y': noTone(buzzer); show_value = false; break;
       case 'x': brake(); noTone(buzzer); show_value = false;  break;
-
+      case 'z': reset_encoders(); break;
       default: ok = false;
 
     }
@@ -155,6 +163,7 @@ void process_serial_data() {
        y [-----------]: Stop playing tone
        m [-255 to 255]: Set running mode [0 - 5 are active modes]
        x [-----------]: Brake motors and stop active mode
+       z [-----------]: Reset wheel encoders
     */
 
     if (debug) {

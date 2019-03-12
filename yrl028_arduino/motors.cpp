@@ -11,6 +11,8 @@
 
 volatile long enc_1_count = 0;
 volatile long enc_2_count = 0;
+volatile long enc_1_cumulative = 0;
+volatile long enc_2_cumulative = 0;
 
 void setPwmFrequency(int divisor) {
  byte mode;
@@ -113,8 +115,9 @@ void stop_motors() {
 void enc_1_ISR() {
   boolean a = digitalRead(motor_1_int);
   boolean b = digitalRead(motor_1_dir);
-  if(a==b) enc_1_count++;
-  else enc_1_count--;
+  if(a==b) enc_1_count--;
+  else enc_1_count++;
+  enc_1_cumulative++;
 }
 
 void enc_2_ISR() {
@@ -122,9 +125,12 @@ void enc_2_ISR() {
   boolean b = digitalRead(motor_2_dir);
   if(a==b) enc_2_count++;
   else enc_2_count--;
+  enc_2_cumulative++;
 }
 
 void reset_encoders() {
   enc_1_count=0;
   enc_2_count=0;
+  enc_1_cumulative=0;
+  enc_2_cumulative=0;
 }

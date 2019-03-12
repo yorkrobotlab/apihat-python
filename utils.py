@@ -5,7 +5,7 @@
 #
 # James Hilder, York Robotics Laboratory, Feb 2019
 
-import subprocess, os, timeit, time, datetime, sensors, settings, logging
+import subprocess, os, timeit, time, datetime, sensors, settings, logging, arduino
 
 def get_program_filelist():
     filelist =  [f[:-10] for f in os.listdir(settings.PROGRAM_FILEPATH) if (os.path.isfile(os.path.join(settings.PROGRAM_FILEPATH, f)) and f.endswith('_apihat.py'))]
@@ -35,10 +35,10 @@ def decode_time(epoch_seconds):
 def dynamic_values_to_csv():
     update_cpu_load()
     mem = get_mem_usage()
-    return "%2.1f,%2.1f,%2.1f,%2.1f,%2.1f,%d,%2.1f,%2.1f,%2.1f,%d,%d,%2.2f,%2.2f,%d,%d,%d,%d" % (cpu_percent_load_array[0][4]*100,cpu_percent_load_array[1][4]*100,cpu_percent_load_array[2][4]*100,cpu_percent_load_array[3][4]*100,cpu_percent_load_array[4][4]*100,get_arm_clockspeed(),get_pcb_temp(),get_cpu_temp(),get_gpu_temp(),mem[0],mem[1],mem[2],get_battery_voltage(),sensors.read_adc(0),sensors.read_adc(1),sensors.read_adc(2),sensors.read_adc(3))
+    return "%2.1f,%2.1f,%2.1f,%2.1f,%2.1f,%d,%2.1f,%2.1f,%2.1f,%d,%d,%2.2f,%2.2f,%d,%d,%d,%d,%d,%d,%d,%d" % (cpu_percent_load_array[0][4]*100,cpu_percent_load_array[1][4]*100,cpu_percent_load_array[2][4]*100,cpu_percent_load_array[3][4]*100,cpu_percent_load_array[4][4]*100,get_arm_clockspeed(),get_pcb_temp(),get_cpu_temp(),get_gpu_temp(),mem[0],mem[1],mem[2],get_battery_voltage(),sensors.read_adc(0),sensors.read_adc(1),sensors.read_adc(2),sensors.read_adc(3),arduino.read_encoder(1),arduino.read_encoder(3),arduino.read_encoder(2),arduino.read_encoder(4))
 
 def dynamic_values_to_csv_header():
-    return "total-cpu-load,cpu-0-load,cpu-1-load,cpu-2-load,cpu-3-load,clock-speed,pcb-temp,cpu-temp,gpu-temp,memory-used,memory-total,memory-used-pct,battery-voltage,analog-1,analog-2,analog-3,analog-4"
+    return "total-cpu-load,cpu-0-load,cpu-1-load,cpu-2-load,cpu-3-load,clock-speed,pcb-temp,cpu-temp,gpu-temp,memory-used,memory-total,memory-used-pct,battery-voltage,analog-1,analog-2,analog-3,analog-4,enc-1-relative,enc-1-cumulative,enc-2-relative,enc-2-cumulative"
 
 def get_battery_voltage():
     return sensors.read_voltage()

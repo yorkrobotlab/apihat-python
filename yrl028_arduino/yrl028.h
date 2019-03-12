@@ -36,7 +36,9 @@ const int BATTERY_FLAT = 10;
 
 //Global variables
 extern volatile long enc_1_count;
+extern volatile long enc_1_cumulative;
 extern volatile long enc_2_count;
+extern volatile long enc_2_cumulative;
 
 float get_battery_voltage(void);
 void check_for_shutdown(void);

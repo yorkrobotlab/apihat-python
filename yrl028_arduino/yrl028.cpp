@@ -22,7 +22,7 @@
 
 unsigned long startMillis;
 
-int hb_period = 1130;  //Heart-beat period in ms; adjusted from 1000 to sync with Pi better
+int hb_period = 1000;  //Heart-beat period in ms; adjusted from 1000 to sync with Pi better
 int power_state = 0;
 
 /**
@@ -131,7 +131,7 @@ void yrl028_loop() {
         delay(20);
         if(check_battery()){
           power_state = WAITING_FOR_BOOT;
-          hb_period = 1120;
+          hb_period = 1000;
         }
       }
       break;
@@ -146,7 +146,7 @@ void yrl028_loop() {
         if(check_switch()){
           delay(20);
           if(check_battery()){
-            hb_period = 1120;
+            hb_period = 1000;
             power_state = WAITING_FOR_BOOT;
           }
         }

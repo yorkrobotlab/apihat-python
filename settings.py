@@ -1,13 +1,13 @@
 #!/usr/bin/python
-# YRL028 - APIHAT - Python 3 API Version 0.1
+# YRL028 - APIHAT - Python 3 API Version 0.2
 #
 # Settings and constants file
 #
-# James Hilder, York Robotics Laboratory, Feb 2019
+# James Hilder, York Robotics Laboratory, Mar 2019
 
 import logging,sys
 
-VERSION_STRING="0.01.190217"
+VERSION_STRING="0.02.190313"
 # Set the Python logging level; recommend INFO for deployment and DEBUG for debugging
 LOGGING_MODE = logging.INFO
 #LOGGING_MODE = logging.DEBUG
@@ -34,9 +34,9 @@ POLL_PERIOD             = 1.0                                                   
 
 ENABLE_BATTERY_MONITOR    = True                                                #If enabled core.py will display visual+audible warnings when battery low
 BATTERY_CRITICAL_SHUTDOWN = True                                                #If enabled, system will shutdown when Vbatt<BATTERY_SHUTDOWN_VOLTAGE
-BATTERY_LOW_VOLTAGE = 10.2
-BATTERY_CRITICAL_VOLTAGE = 9.2
-BATTERY_SHUTDOWN_VOLTAGE = 8.9
+BATTERY_LOW_VOLTAGE = 10.2                                                      #Voltage at which low voltage warning given
+BATTERY_CRITICAL_VOLTAGE = 9.2                                                  #Voltage at which critical voltage warning given
+BATTERY_SHUTDOWN_VOLTAGE = 8.9                                                  #Enforced shutdown voltage
 
 # The following settings are only used when a YRL015 switch board is NOT connected
 ENABLE_DEMO_MODE        = False

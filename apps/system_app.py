@@ -1,8 +1,8 @@
-# YRL028 - APIHAT - Dash-DAQ Server Version 0.1
+# YRL028 - APIHAT - Dash-DAQ Server Version 0.2
 #
 # System Tab
 #
-# James Hilder, York Robotics Laboratory, Feb 2019
+# James Hilder, York Robotics Laboratory, Mar 2019
 
 import dash_core_components as dcc
 import dash_html_components as html
