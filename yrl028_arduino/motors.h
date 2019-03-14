@@ -25,6 +25,7 @@ const int motor_2_dir = A1; //Output B of Motor 2 Encoder
 
 // Function prototypes
 void setPwmFrequency(int divisor);
+void set_motor_speeds(int speed1, int speed2);
 void set_motor1_speed(int speed);
 void set_motor2_speed(int speed);
 void brake(void);

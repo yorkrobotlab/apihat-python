@@ -33,27 +33,59 @@ void i2c_receive_event(int howMany) {
   i2c_received_length = ndx;
   new_i2c_data = true;
   non_displayed_i2c_data = true;
+    switch(i2c_register){
+      case 5: if(i2c_received_length == 1){
+        int speed = ((int)i2c_received[0] + 128) << 1;
+        if(speed > 255) speed -= 512;
+        set_motor1_speed(speed);
+        Serial.print("M1:");
+        Serial.println(speed);
+      }
+        break;
+      case 6: if(i2c_received_length == 1){
+        int speed = ((int)i2c_received[0] + 128) << 1;
+        if(speed > 255) speed -= 512;
+        set_motor2_speed(speed);
+        Serial.print("M2:");
+        Serial.println(speed);
+      }
+        break;
+      case 7: if(i2c_received_length == 2){
+        int speed1 = ((int)i2c_received[0]+128) << 1;
+        int speed2 = ((int)i2c_received[1]+128) << 1;
+        if(speed1 > 255) speed1 = speed1 - 512;
+        if(speed2 > 255) speed2 = speed2 - 512;
+        set_motor_speeds(speed1,speed2);
+        Serial.print("M1:");
+        Serial.print(speed1);
+        Serial.print(" M2:");
+        Serial.println(speed2);        
+      }
+        break;
+      };     
 }
 
 void process_i2c_data() {
-  if (non_displayed_i2c_data) {
-    Serial.print("I2C Receive - ");
-    Serial.print(i2c_register, HEX);
-    if (i2c_received_length == 0) {
-      Serial.println(" - No data");
-    } else {
-      Serial.print(" - ");
-      Serial.print(i2c_received_length, HEX);
-      Serial.print(" [0x");
-      for (byte i = 0; i < i2c_received_length; i++) {
-        Serial.print(i2c_received[i], HEX);
-        if (i + 1 < i2c_received_length) {
-          Serial.print(",0x");
-        }
-      }
-      Serial.println("]");
-    }
-  }
+//  if (non_displayed_i2c_data) {
+//   
+//    }
+//    Serial.print("I2C Receive - ");
+//    Serial.print(i2c_register, HEX);
+//    if (i2c_received_length == 0) {
+//      Serial.println(" - No data");
+//    } else {
+//      Serial.print(" - ");
+//      Serial.print(i2c_received_length, HEX);
+//      Serial.print(" [0x");
+//      for (byte i = 0; i < i2c_received_length; i++) {
+//        Serial.print(i2c_received[i], HEX);
+//        if (i + 1 < i2c_received_length) {
+//          Serial.print(",0x");
+//        }
+//      }
+//      Serial.println("]");
+//    }
+//  }
   non_displayed_i2c_data = false;
 }
 
@@ -76,8 +108,8 @@ void i2c_request_event() {
       case 2: write_long(enc_2_count); break;
       case 3: write_long(enc_1_cumulative); break;
       case 4: write_long(enc_2_cumulative); break;
-      
     }
+    new_i2c_data = false;
   }
 }
 

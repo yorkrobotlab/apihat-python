@@ -16,14 +16,29 @@ def bytes_to_signed_long(list_m):
  if(long_val >= 2147483648): long_val -= 4294967296
  return long_val
 
+def set_motor_speeds(speed1,speed2):
+    i2c_bus.write_i2c_block_data(s.ARDUINO_ADDRESS,7,[speed1+128,speed2+128])
+    # set_motor_1_speed(speed1)
+    # set_motor_2_speed(speed2)
+
+def set_motor_1_speed(speed):
+    i2c_bus.write_byte_data(s.ARDUINO_ADDRESS, 5, speed+128)
+
+def set_motor_2_speed(speed):
+    i2c_bus.write_byte_data(s.ARDUINO_ADDRESS, 6, speed+128)
+
 def write_message(register,message):
     i2c_bus.write_i2c_block_data(s.ARDUINO_ADDRESS, register, message)
 
 def read_encoder(register):
-  i2c_bus.write_byte(s.ARDUINO_ADDRESS,register)
-  msg = i2c_msg.read(s.ARDUINO_ADDRESS,4)
-  i2c_bus.i2c_rdwr(msg)
-  return bytes_to_signed_long(list(msg))
+    try:
+      i2c_bus.write_byte(s.ARDUINO_ADDRESS,register)
+      msg = i2c_msg.read(s.ARDUINO_ADDRESS,4)
+      i2c_bus.i2c_rdwr(msg)
+      return bytes_to_signed_long(list(msg))
+    except OSError:
+      logging.error("Error reading i2c encoder message from Arduino")
+      return 0
 
 #Command line test [will run when arduino.py is run directly]
 if __name__ == "__main__":

@@ -112,6 +112,7 @@ app.layout = html.Div(
             className="banner",
         ),
         dcc.Tabs(id="tabs", value='tab-1-example', children=tab_list, style=tabs_styles),
+        dcc.Store(id='memory'),
         html.Div(id='tabs-pages')
     ],
     style={

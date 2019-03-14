@@ -49,6 +49,11 @@ void setup_motors(){
   attachInterrupt(digitalPinToInterrupt(motor_2_int),enc_2_ISR,CHANGE);
 }
 
+void set_motor_speeds(int speed1, int speed2){
+   set_motor1_speed(speed1);
+   set_motor2_speed(speed2);
+}
+
 void set_motor1_speed(int speed) {
   if (speed > 0) {
     speed += motor_stall_offset;
