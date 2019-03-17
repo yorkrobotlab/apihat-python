@@ -7,7 +7,7 @@
 
 import logging,sys
 
-VERSION_STRING="0.02.190313"
+VERSION_STRING="0.02.190317"
 # Set the Python logging level; recommend INFO for deployment and DEBUG for debugging
 LOGGING_MODE = logging.INFO
 #LOGGING_MODE = logging.DEBUG
