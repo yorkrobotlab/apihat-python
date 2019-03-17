@@ -1,6 +1,5 @@
 #!/bin/bash
 killall python
 rm /ramdisk/*
-cd ~
 . bootscript.sh
 

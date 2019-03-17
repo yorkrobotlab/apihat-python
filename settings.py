@@ -42,6 +42,7 @@ BATTERY_SHUTDOWN_VOLTAGE = 8.9                                                  
 ENABLE_DEMO_MODE        = False
 ENABLE_STATS_MODE       = False
 ENABLE_AUTOSENSE_MODE   = True
+SHOW_HOSTNAME		= True
 
 # The following are things you are less likely to want to change on the YRL028 setup...
 OLED_BUS                = 8                                                     #The bus which the OLED module is attached to [i2c_8 on YRL028]

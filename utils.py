@@ -1,9 +1,9 @@
 #!/usr/bin/python
-# YRL028 - APIHAT - Python 3 API Version 0.1
+# YRL028 - APIHAT - Python 3 API Version 0.2
 #
 # Main program utilities
 #
-# James Hilder, York Robotics Laboratory, Feb 2019
+# James Hilder, York Robotics Laboratory, March 2019
 
 import subprocess, os, timeit, time, datetime, sensors, settings, logging, arduino
 
@@ -50,6 +50,10 @@ def get_ip():
     cmd = "hostname -I | cut -d\' \' -f1"
     IP = subprocess.check_output(cmd, shell = True ).strip()
     return IP.decode()
+
+def get_hostname():
+    cmd = "hostname"
+    return subprocess.check_output(cmd, shell = True ).strip().decode()
 
 def get_cpu_load_using_top():
     cmd = "top -bn1 | grep load | awk '{printf \"%.2f\", $(NF-2)}'"

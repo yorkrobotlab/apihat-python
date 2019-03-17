@@ -188,7 +188,8 @@ time.sleep(0.8)
 has_switch = switch.detect()
 
 if not has_switch:
-    display.two_line_text_wrapped("IP Address:",utils.get_ip())
+    if(settings.SHOW_HOSTNAME): display.two_line_text_wrapped(utils.get_hostname(),utils.get_ip())
+    else: display.two_line_text_wrapped("IP Address:",utils.get_ip())
     time.sleep(1)
     demo_mode_enabled = settings.ENABLE_DEMO_MODE;
     stats_mode_enabled = settings.ENABLE_STATS_MODE;
