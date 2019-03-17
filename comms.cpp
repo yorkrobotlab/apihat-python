@@ -63,7 +63,13 @@ void i2c_receive_event(int howMany) {
       }
         break;
       case 8: if(i2c_received_length == 2){
-        int freq = (unsigned int) i2c_received[0] << 8 + (unsigned int) i2c_received[1];
+        uint8_t msb = (uint8_t) i2c_received[0];
+        uint8_t lsb = (uint8_t) i2c_received[1];
+        //Serial.print("MSB:");
+        //Serial.println(msb);
+        //Serial.print("LSB:");
+        //Serial.println(lsb);
+        int freq = (msb * 256) + lsb;
         if((freq > 29) && (freq<10001)) tone(buzzer,freq);
         else noTone(buzzer);
         Serial.print("T:");

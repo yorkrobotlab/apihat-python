@@ -16,6 +16,15 @@ def bytes_to_signed_long(list_m):
  if(long_val >= 2147483648): long_val -= 4294967296
  return long_val
 
+def tone(frequency):
+    msb = int(frequency / 256)
+    lsb = int(frequency % 256)
+    print("MSB %d  LSB %d" % (msb,lsb))
+    i2c_bus.write_i2c_block_data(s.ARDUINO_ADDRESS,8,[msb,lsb])
+
+def stop_tone():
+    tone(0)
+    
 def set_motor_speeds(speed1,speed2):
     i2c_bus.write_i2c_block_data(s.ARDUINO_ADDRESS,7,[speed1+128,speed2+128])
     # set_motor_1_speed(speed1)
@@ -49,4 +58,11 @@ if __name__ == "__main__":
  enc_2_count = read_encoder(2)
  enc_2_odo = read_encoder(4)
  logging.info("Left %d [%d] | Right %d [%d]" % (enc_1_count,enc_1_odo,enc_2_count,enc_2_odo))
+ tone(250)
+ time.sleep(0.5)
+ tone(300)
+ time.sleep(0.5)
+ tone(6000)
+ time.sleep(0.5)
+ stop_tone()
  os._exit(1)
