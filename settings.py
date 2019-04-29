@@ -1,13 +1,13 @@
 #!/usr/bin/python
-# YRL028 - APIHAT - Python 3 API Version 0.2
+# YRL028 - APIHAT - Python 3 API Version 0.3
 #
 # Settings and constants file
 #
-# James Hilder, York Robotics Laboratory, Mar 2019
+# James Hilder, York Robotics Laboratory, May 2019
 
 import logging,sys
 
-VERSION_STRING="0.02.190317"
+VERSION_STRING="0.03.190501"
 # Set the Python logging level; recommend INFO for deployment and DEBUG for debugging
 LOGGING_MODE = logging.INFO
 #LOGGING_MODE = logging.DEBUG
@@ -18,14 +18,38 @@ AUDIO_VOLUME = 90
 AUDIO_FILEPATH = "wav"
 PROGRAM_FILEPATH = "user_programs"
 ENABLE_ROBOT_TAB = True                                                         #Enable if a robot sensor model and motor model is defined to enable components in DASH server
+
 # Define the robot sensors for DASH server, list of list of 4 elements: sensor ID, sensor type, theta, +-view angle
+
+# Sensor model for original black robot
+# ROBOT_SENSOR_MODEL = [
+#     ['analog-1','2y0a21',48,14],
+#     ['analog-2','2y0a21',18,14],
+#     ['analog-3','2y0a21',312,14],
+#     ['analog-4','2y0a21',342,14]
+# ]
+
+# Sensor model for AARM robot
 ROBOT_SENSOR_MODEL = [
-    ['analog-1','2y0a21',48,14],
-    ['analog-2','2y0a21',18,14],
-    ['analog-3','2y0a21',312,14],
-    ['analog-4','2y0a21',342,14]
+    ['analog-1','2y0a21',315,14],
+    ['analog-2','2y0a21',345,14],
+    ['analog-3','2y0a21',15,14],
+    ['analog-4','2y0a21',45,14]
 ]
 
+# The following settings are applicable if a YRL031 dual H-bridge driver board is attached
+YRL031_HBRIDGE_BOARD    = True                                                  #If enabled system will expect to find a YRL031 high-current H-bridge board attached to one of the i2c busses
+YRL031_BUS              = 6                                                     #The I2C port to which the h-bridge board is attached
+YRL031_ADDRESS          = 0x58
+
+# The automatic fan program requires a 5V fan to be attached to i2c motor 2.
+ENABLE_FAN_PROGRAM      = True                                                  #If enabled, core.py will control motor 2 speed relevant to PCB, CPU and where applicable YRL031 temperature
+FAN_PROGRAM_BASE_SPEED  = 0.40                                                  #Minimum PWM speed for fan; too low may stall
+FAN_PROGRAM_BASE_PCB_TEMP = 28                                                  #PCB Temperature in C at which fan will start to spin
+FAN_PROGRAM_BASE_CPU_TEMP = 45                                                  #CPU Temperature in C at which fan will start to spin
+FAN_PROGRAM_BASE_YRL031_TEMP = 45                                               #YRL031 Temperature in C at which fan will start to spin (if attached)
+FAN_PROGRAM_DELTA = 20                                                          #The range of temperature at which fan will reach top speed
+FAN_PROGRAM_HYSTERESIS = 2                                                      #The drop in temperature below base at which fan will stop
 
 DISPLAY_ROTATED         = True                                                  #Set to true if the OLED module is rotated to flip image
 SENSOR_PORT_LIST        = [3,4,5]                                               #The I2C ports which will be scanned for sensors

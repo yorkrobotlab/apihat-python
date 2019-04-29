@@ -1,9 +1,9 @@
 #!/usr/bin/python
-# YRL028 - APIHAT - Python 3 API Version 0.1
+# YRL028 - APIHAT - Python 3 API Version 0.3
 #
 # Main program
 #
-# James Hilder, York Robotics Laboratory, Feb 2019
+# James Hilder, York Robotics Laboratory, May 2019
 
 
 import logging, sys
@@ -12,7 +12,7 @@ import settings
 settings.init()
 
 import RPi.GPIO as GPIO, threading, subprocess, time, pickle, os
-import display, led, demo, audio, speech, utils, sensors, switch                #YRL028 Imports
+import display, led, demo, audio, speech, utils, sensors, switch, motors        #YRL028 Imports
 from threading import Timer
 from subprocess import call
 from queue import *
@@ -37,6 +37,13 @@ status_interrupt = False
 power_interrupt = False
 previous_switch_state = 0
 battery_warning_state = 0                                                       # Used so we don't repeatedly give battery low warnings
+
+update_stats = False
+update_sensors = False
+update_battery_monitor = False
+update_fan_program = False
+
+fan_running = False
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(settings.SWITCH_INTERRUPT_PIN,GPIO.IN,pull_up_down=GPIO.PUD_UP)
@@ -107,9 +114,6 @@ def switch_interrupt_handler():
     previous_switch_state = current_switch_state
   switch_interrupt = False
 
-update_stats = False
-update_sensors = False
-update_battery_monitor = False
 
 def stats_thread():
   global update_stats
@@ -126,6 +130,12 @@ def battery_thread():
    while handler_running:
        time.sleep(2)
        update_battery_monitor = True
+
+def fan_thread():
+    global update_fan_program
+    while handler_running:
+        time.sleep(2)
+        update_fan_program = True
 
 def data_thread():
    global update_sensors
@@ -204,16 +214,51 @@ if has_switch:
     demo.start_demo_threads()
 
 handler_running = True
-t=threading.Thread(target=stats_thread)
-t.start()
+stats_rec_thread=threading.Thread(target=stats_thread)
 battery_monitor_thread = threading.Thread(target=battery_thread)
 data_polling_thread = threading.Thread(target=data_thread)
+fan_program_thread = threading.Thread(target=fan_thread)
+stats_rec_thread.start()
 data_polling_thread.start()
 if(settings.ENABLE_BATTERY_MONITOR): battery_monitor_thread.start()
+if(settings.ENABLE_FAN_PROGRAM): fan_program_thread.start()
 time.sleep(0.5)
 
 #Run the switch interrupt handler to set current states
 if has_switch: switch_interrupt_handler()
+
+def set_fan_speed():
+    global fan_running
+    cpu_temp = utils.get_cpu_temp()
+    cpu_delta = cpu_temp - settings.FAN_PROGRAM_BASE_CPU_TEMP
+    pcb_temp = sensors.read_pcb_temp()
+    pcb_delta = pcb_temp - settings.FAN_PROGRAM_BASE_PCB_TEMP
+    ext_temp = settings.FAN_PROGRAM_BASE_YRL031_TEMP - settings.FAN_PROGRAM_HYSTERESIS  #If no YRL031 attached...
+    #if(settings.YRL031_HBRIDGE_BOARD) ext_temp = [read hbridge temp function]
+    ext_delta = ext_temp - settings.FAN_PROGRAM_BASE_YRL031_TEMP
+    max_delta = pcb_delta
+    max_str = "PCB"
+    max_temp = pcb_temp
+    if(cpu_delta>pcb_delta):
+        max_delta = cpu_delta
+        max_str="CPU"
+        max_temp = cpu_temp
+    if(ext_delta>max_delta):
+        max_delta=ext_delta
+        max_str="HBRIDGE"
+        max_temp = ext_temp
+    if(max_delta > -settings.FAN_PROGRAM_HYSTERESIS):
+        fan_speed = (max_delta / settings.FAN_PROGRAM_DELTA * (1.0 - settings.FAN_PROGRAM_BASE_SPEED)) + settings.FAN_PROGRAM_BASE_SPEED
+        if(fan_speed < 0): fan_speed = 0
+        if(fan_speed > 1.0): fan_speed = 1.0
+        logging.info("Fan set to %f%% [%s TEMP=%d C]" % (fan_speed * 100, max_str, max_temp))
+        fan_running = True
+        motors.set_motor2_speed(fan_speed)
+    elif(fan_running):
+        fan_running = False
+        logging.info("Fan switched off")
+        motors.set_motor2_speed(0)
+
 
 def shutdown():
     logging.critical("Battery voltage critically low, shutting down.")
@@ -268,7 +313,7 @@ def program_loop():
 
 
 def handler_loop():
-  global update_stats, update_sensors, update_battery_monitor, battery_warning_state, program_name, program_state
+  global update_stats, update_sensors, update_fan_program, update_battery_monitor, battery_warning_state, program_name, program_state
   while handler_running:
     if settings.ENABLE_PROGRAMS: program_loop()
     if switch_interrupt:
@@ -294,6 +339,9 @@ def handler_loop():
       if(battery_warning_state != 0 and voltage>(settings.BATTERY_LOW_VOLTAGE + 0.3)):
           battery_warning_state = 0
       update_battery_monitor = False
+    if update_fan_program:
+        set_fan_speed()
+        update_fan_program = False
     time.sleep(0.001)
 
 handler_loop()
