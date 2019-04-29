@@ -39,8 +39,8 @@ ROBOT_SENSOR_MODEL = [
 
 # The following settings are applicable if a YRL031 dual H-bridge driver board is attached
 YRL031_HBRIDGE_BOARD    = True                                                  #If enabled system will expect to find a YRL031 high-current H-bridge board attached to one of the i2c busses
-YRL031_BUS              = 6                                                     #The I2C port to which the h-bridge board is attached
-YRL031_ADDRESS          = 0x58
+YRL031_BUS              = 6                                                     #The I2C port to which the h-bridge board is attached.  Use port 10 [i2c_7] if the PCB is directly mounted on the APIHAT.
+YRL031_ADDRESS          = 0x58                                                  #Default configured address = 0x58
 
 # The automatic fan program requires a 5V fan to be attached to i2c motor 2.
 ENABLE_FAN_PROGRAM      = True                                                  #If enabled, core.py will control motor 2 speed relevant to PCB, CPU and where applicable YRL031 temperature

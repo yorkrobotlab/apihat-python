@@ -1,5 +1,7 @@
 // Arduino Code for YRL028 - APIHAT
 //
+// Version 0.1.190429
+//
 // Copyright (C) 2019 James Hilder, York Robotics Laboratory
 // This is free software, with no warranty, and you are welcome to redistribute it
 // under certain conditions.  See GNU GPL v3.0.
@@ -24,6 +26,7 @@ unsigned long startMillis;
 
 int hb_period = 1000;  //Heart-beat period in ms; adjusted from 1000 to sync with Pi better
 int power_state = 0;
+int critical_count = 0; //Count for battery critical condition; shutdown on second occurence
 
 /**
  * Return the battery voltage.  10 bit ADC, 3.3V = 1023.  Bat_ref uses 500K:100K PD: 
@@ -44,21 +47,29 @@ void check_for_shutdown() {
 }
 
 /**
- * Compare battery voltage to battery_critical reference.  If it is below, do a quick chime, force main V.reg off, enter an endless
+ * Compare battery voltage to battery_critical reference.  If it is below, do a quick chime, increment a critical-state counter, 
+ * then recheck the value.  If the error state is repeated 2 more times [approx 1 second] force main V.reg off, enter an endless
  * loop blocking booting [in order to boot, the Arduino will need to be reset, but this would generally happen anyway as the battery
  * would be changed].  This state shouldn't really be reached as the R-Pi has its own battery monitoring and should shutdown at an 
  * earlier point.  A reference voltage of around 8.5V is probably a safe choice for use with 3-cell Li-Po batteries.
  */
 boolean check_battery() {
     if(get_battery_voltage() < battery_critical_voltage){
-      power_state = BATTERY_FLAT;
-      Serial.println(F("Battery voltage critically low. Switching off regulator"));
-      alert();
-      hb_period = 2000; //Sets the heart-beat period to 2s
-      pinMode(enable_vr, OUTPUT);
-      digitalWrite(enable_vr,LOW);
-      return false;      
+      critical_count ++;
+      if(critical_count > 2){
+        power_state = BATTERY_FLAT;
+        Serial.println(F("Battery voltage critically low. Switching off regulator"));
+        alert_note();
+        hb_period = 2000; //Sets the heart-beat period to 2s
+        pinMode(enable_vr, OUTPUT);
+        digitalWrite(enable_vr,LOW);
+        return false;      
+      }else{
+        alert_note();
+        check_battery();
+      }
     }
+    critical_count = 0;
     return true;
 }
 
@@ -77,7 +88,7 @@ boolean check_switch() {
 void yrl028_setup() {
   // Setup serial console
   Serial.begin(57600); 
-  Serial.println(F("YRL028-Arduino Code"));
+  Serial.println(F("YRL028-Arduino Code-Version 0.1.190429"));
   // Setup LEDs
   pinMode(power_led, OUTPUT);
   pinMode(red_led, OUTPUT);

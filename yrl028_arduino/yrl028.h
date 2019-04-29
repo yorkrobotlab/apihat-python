@@ -1,3 +1,9 @@
+// Arduino Code for YRL028 - APIHAT
+//
+// Version 0.1.190429
+//
+// Copyright (C) 2019 James Hilder, York Robotics Laboratory
+
 #ifndef YRL028_H
 #define YRL028_H
 
@@ -27,7 +33,7 @@ const int pi_shutdown_input = A3;
 const int power_button = A2;
 const int buzzer = 11;              
 const int battery_ref = A7;
-const float battery_critical_voltage = 8.6;  //Below this voltage, hard-shutdown V.reg.
+const float battery_critical_voltage = 8.0;  //Below this voltage, hard-shutdown V.reg.
 
 const int SWITCH_OFF = 0;
 const int POWER_OFF = 1;

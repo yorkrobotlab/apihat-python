@@ -1,6 +1,6 @@
-// Arduino Code for YRL028 - APIHAT
+// Arduino Code for YRL031 - Dual H-Bridge Driver
 //
-// Version 0.1.190429
+// Version 0.1 - May 2019
 //
 // motors.h : Header for motor and wheel encoder functions
 //
@@ -11,15 +11,15 @@
 #ifndef MOTORS_H
 #define MOTORS_H
 
-#include "yrl028.h"
+#include "yrl031.h"
 
 // Pin assignments
-const int motor_1_pwm = 9;              // D9=12
-const int motor_1_f = 5;                // D5=8
-const int motor_1_r = 6;                // D6=9
-const int motor_2_pwm = 10;             // D10=13
-const int motor_2_f = 7;                // D7=10
-const int motor_2_r = 8;                // D8=11
+const int motor_1_pwm = 9;              
+const int motor_1_direction = 4;                
+const int motor_1_brakemode = 6;                
+const int motor_2_pwm = 10;             
+const int motor_2_direction = 5;               
+const int motor_2_brakemode = 7;                
 const int motor_1_int = 2;  //Output A of Motor 1 Encoder
 const int motor_2_int = 3;  //Output A of Motor 2 Encoder
 const int motor_1_dir = A0; //Output B of Motor 1 Encoder

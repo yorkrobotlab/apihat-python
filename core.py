@@ -247,7 +247,7 @@ def set_fan_speed():
         max_delta=ext_delta
         max_str="HBRIDGE"
         max_temp = ext_temp
-    if(max_delta > -settings.FAN_PROGRAM_HYSTERESIS):
+    if(max_delta > 0 or (fan_running and max_delta > -settings.FAN_PROGRAM_HYSTERESIS)):
         fan_speed = (max_delta / settings.FAN_PROGRAM_DELTA * (1.0 - settings.FAN_PROGRAM_BASE_SPEED)) + settings.FAN_PROGRAM_BASE_SPEED
         if(fan_speed < 0): fan_speed = 0
         if(fan_speed > 1.0): fan_speed = 1.0

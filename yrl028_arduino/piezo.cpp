@@ -1,5 +1,7 @@
 // Arduino Code for YRL028 - APIHAT
 //
+// Version 0.1.190429
+//
 // piezo.cpp  : Source for piezo buzzer 
 //
 // Copyright (C) 2019 James Hilder, York Robotics Laboratory
@@ -30,6 +32,14 @@ void chime(boolean positive) {
   if (positive) tone(buzzer, 1568, 50);
   else tone(buzzer, 784, 50);
   delay(100);
+}
+
+/**
+*  Play a short 1-note alert with delay
+*/
+void alert_note() {
+  tone(buzzer, 784, 100);
+  delay(300);
 }
 
 /**

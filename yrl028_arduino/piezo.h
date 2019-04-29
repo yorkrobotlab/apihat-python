@@ -1,5 +1,7 @@
 // Arduino Code for YRL028 - APIHAT
 //
+// Version 0.1.190429
+//
 // piezo.h  : Header for piezo buzzer 
 //
 // Copyright (C) 2019 James Hilder, York Robotics Laboratory
@@ -13,6 +15,7 @@
 
 void play_mario(void);
 void chime(boolean positive);
+void alert_note(void);
 void alert(void);
 
 #endif

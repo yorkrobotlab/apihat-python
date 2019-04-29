@@ -1,6 +1,6 @@
-// Arduino Code for YRL028 - APIHAT
+// Arduino Code for YRL031
 //
-// Version 0.1.190429
+// Version 0.1 - May 2019
 //
 // comms.cpp  : Source for i2c and serial communications
 //
@@ -8,7 +8,7 @@
 // This is free software, with no warranty, and you are welcome to redistribute it
 // under certain conditions.  See GNU GPL v3.0.
 
-#include "yrl028.h"
+#include "yrl031.h"
 
 //Serial variables
 const byte numChars = 32;  //Size of serial string buffer (-1)
@@ -64,20 +64,7 @@ void i2c_receive_event(int howMany) {
         Serial.println(speed2);        
       }
         break;
-      case 8: if(i2c_received_length == 2){
-        uint8_t msb = (uint8_t) i2c_received[0];
-        uint8_t lsb = (uint8_t) i2c_received[1];
-        //Serial.print("MSB:");
-        //Serial.println(msb);
-        //Serial.print("LSB:");
-        //Serial.println(lsb);
-        int freq = (msb * 256) + lsb;
-        if((freq > 29) && (freq<10001)) tone(buzzer,freq);
-        else noTone(buzzer);
-        Serial.print("T:");
-        Serial.println(freq);
-      }
-        break;
+
       };     
 }
 
@@ -119,7 +106,7 @@ void i2c_request_event() {
     Serial.println("Invalid i2c request");
   } else {
     switch (i2c_register) {
-      case 0: Wire.write("yrl028"); break;
+      case 0: Wire.write("yrl031"); break;
       case 1: write_long(enc_1_count); break;
       case 2: write_long(enc_2_count); break;
       case 3: write_long(enc_1_cumulative); break;
@@ -187,11 +174,7 @@ void process_serial_data() {
           set_motor2_speed(parsed_value);
         } else ok = false; break;
       case 'b': brake(); show_value = false; break; //brake!
-      //case 'q': toggle_user_led(); show_value=false; break;
-      //case 'w': toggle_boot_led(); show_value=false; break;
-      case 't': if (parse_integer_from_serial(30, 10000)) tone(buzzer, parsed_value); else ok = false; break;
-      case 'y': noTone(buzzer); show_value = false; break;
-      case 'x': brake(); noTone(buzzer); show_value = false;  break;
+      case 'x': brake(); show_value = false;  break;
       case 'z': reset_encoders(); break;
       default: ok = false;
 

@@ -1,6 +1,6 @@
-// Arduino Code for YRL028 - APIHAT
+// Arduino Code for YRL031
 //
-// Version 0.1.190429
+// Version 0.1 - May 2019
 //
 // comms.h  : Header for i2c and serial communications
 //
@@ -11,7 +11,7 @@
 #ifndef COMMS_H
 #define COMMS_H
 
-#include "yrl028.h"
+#include "yrl031.h"
 
 void i2c_request_event(void);
 void i2c_receive_event(int howMany);
