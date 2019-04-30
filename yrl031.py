@@ -18,8 +18,8 @@ def bytes_to_signed_long(list_m):
 
 def set_motor_speeds(speed1,speed2):
     i2c_bus.write_i2c_block_data(s.YRL031_ADDRESS,7,[speed1+128,speed2+128])
-    # set_motor_1_speed(speed1)
-    # set_motor_2_speed(speed2)
+    #set_motor_1_speed(speed1)
+    #set_motor_2_speed(speed2)
 
 def set_motor_1_speed(speed):
     i2c_bus.write_byte_data(s.YRL031_ADDRESS, 5, speed+128)
@@ -29,6 +29,17 @@ def set_motor_2_speed(speed):
 
 def write_message(register,message):
     i2c_bus.write_i2c_block_data(s.YRL031_ADDRESS, register, message)
+
+def read_temperature():
+    try:
+      i2c_bus.write_byte(s.YRL031_ADDRESS,8)
+      msg = i2c_msg.read(s.YRL031_ADDRESS,2)
+      i2c_bus.i2c_rdwr(msg)
+      message = list(msg)
+      return (message[0] << 8) + message[1]
+    except OSError:
+      logging.error("Error reading i2c temperature message from YRL031")
+      return 0
 
 def read_encoder(register):
     try:
@@ -44,10 +55,11 @@ def read_encoder(register):
 if __name__ == "__main__":
  logger = logging.getLogger()
  logger.setLevel(logging.DEBUG)
- set_motor_1_speed(0)
+ #set_motor_1_speed(0)
+ temp = read_temperature()
  enc_1_count = read_encoder(1)
  enc_1_odo = read_encoder(3)
  enc_2_count = read_encoder(2)
  enc_2_odo = read_encoder(4)
- logging.info("Left %d [%d] | Right %d [%d]" % (enc_1_count,enc_1_odo,enc_2_count,enc_2_odo))
+ logging.info("Temp %d | Left %d [%d] | Right %d [%d]" % (temp,enc_1_count,enc_1_odo,enc_2_count,enc_2_odo))
  os._exit(1)

@@ -1,9 +1,9 @@
 #!/usr/bin/python
-# YRL028 - APIHAT - Python 3 API Version 0.2
+# YRL028 - APIHAT - Python 3 API Version 0.3
 #
 # Dash-DAQ Server Index Page Generator
 #
-# James Hilder, York Robotics Laboratory, Mar 2019
+# James Hilder, York Robotics Laboratory, May 2019
 
 
 import dash_core_components as dcc
@@ -14,7 +14,7 @@ import settings
 import pickle
 
 from app import app
-from apps import system_app, arduino_app, control_app, sensors_app, camera_app, analog_app, robot_app
+from apps import system_app, arduino_app, control_app, sensors_app, camera_app, analog_app, robot_app, yrl031_app
 
 app.index_string = '''
 <!DOCTYPE html>
@@ -31,7 +31,7 @@ app.index_string = '''
             {%config%}
             {%scripts%}
         </footer>
-        <div>(C) James Hilder, York Robotics Laboratory, University of York, Mar 2019</div>
+        <div>(C) James Hilder, York Robotics Laboratory, University of York, May 2019</div>
     </body>
 </html>
 '''
@@ -90,6 +90,7 @@ tab_list.extend([
     dcc.Tab(label='Analogue', value='analog-tab', style=tab_style, selected_style=tab_selected_style),
     dcc.Tab(label='Camera', value='camera-tab', style=tab_style, selected_style=tab_selected_style)
 ])
+if(settings.YRL031_HBRIDGE_BOARD): tab_list.extend([dcc.Tab(label='YRL031 H-Bridge', value='yrl031-tab', style=tab_style, selected_style=tab_selected_style),])
 tab_index_list = []
 for sensor in import_sensor_list:
     tab_index = "%s" % sensor[0]
@@ -113,6 +114,7 @@ app.layout = html.Div(
         ),
         dcc.Tabs(id="tabs", value='tab-1-example', children=tab_list, style=tabs_styles),
         dcc.Store(id='memory'),
+        dcc.Store(id='yrl031_memory'),
         html.Div(id='tabs-pages')
     ],
     style={
@@ -138,6 +140,7 @@ def render_content(tab):
     elif tab == 'camera-tab': return camera_app.layout
     elif tab == 'analog-tab': return analog_app.layout
     elif tab == 'robot-tab': return robot_app.layout
+    elif tab == 'yrl031-tab': return yrl031_app.layout
     else:
         for c, index in enumerate(tab_index_list):
             if tab == index:

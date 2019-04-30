@@ -329,7 +329,7 @@ def handler_loop():
       if(voltage < settings.BATTERY_SHUTDOWN_VOLTAGE and settings.BATTERY_CRITICAL_SHUTDOWN): shutdown()
       if(voltage < settings.BATTERY_CRITICAL_VOLTAGE and battery_warning_state != 1):
           battery_warning_state = 1
-          led.animations(8)
+          led.animation(8)
           display.warning("BATTERY EMPTY")
           audio.play_audio_file("wav/batterycriticallylow.wav")
       elif (voltage < settings.BATTERY_LOW_VOLTAGE and battery_warning_state != 2):

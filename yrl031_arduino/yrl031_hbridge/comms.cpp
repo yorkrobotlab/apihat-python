@@ -92,6 +92,13 @@ void process_i2c_data() {
   non_displayed_i2c_data = false;
 }
 
+void write_int16(int16_t value){
+  byte m_array[2];
+  m_array[0]=(value>>8) & 0xFF;
+  m_array[1]=value & 0xFF;
+  Wire.write(m_array,2);
+}
+
 void write_long(int32_t value){
      byte m_array[4];
      m_array[0]=(value >> 24) & 0xFF;
@@ -111,6 +118,7 @@ void i2c_request_event() {
       case 2: write_long(enc_2_count); break;
       case 3: write_long(enc_1_cumulative); break;
       case 4: write_long(enc_2_cumulative); break;
+      case 8: write_int16(analogRead(A7)); break;
     }
     new_i2c_data = false;
   }
