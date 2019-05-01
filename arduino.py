@@ -1,9 +1,9 @@
 #!/usr/bin/python
-# YRL028 - APIHAT - Python 3 API Version 0.2
+# YRL028 - APIHAT - Python 3 API Version 0.3
 #
 # Functions for communicating with the ATMega328P [Arduino]
 #
-# James Hilder, York Robotics Laboratory, Mar 2019
+# James Hilder, York Robotics Laboratory, May 2019
 
 import logging, threading, time, random, os, smbus2                             #General Python imports
 from smbus2 import i2c_msg
@@ -24,7 +24,7 @@ def tone(frequency):
 
 def stop_tone():
     tone(0)
-    
+
 def set_motor_speeds(speed1,speed2):
     i2c_bus.write_i2c_block_data(s.ARDUINO_ADDRESS,7,[speed1+128,speed2+128])
     # set_motor_1_speed(speed1)

@@ -12,7 +12,7 @@ import settings
 settings.init()
 
 import RPi.GPIO as GPIO, threading, subprocess, time, pickle, os
-import display, led, demo, audio, speech, utils, sensors, switch, motors        #YRL028 Imports
+import display, led, demo, audio, speech, utils, sensors, switch, motors, arduino  #YRL028 Imports
 from threading import Timer
 from subprocess import call
 from queue import *
@@ -253,11 +253,18 @@ def set_fan_speed():
         if(fan_speed > 1.0): fan_speed = 1.0
         logging.info("Fan set to %f%% [%s TEMP=%d C]" % (fan_speed * 100, max_str, max_temp))
         fan_running = True
-        motors.set_motor2_speed(fan_speed)
+        if(settings.FAN_ON_ARDUINO):
+            arduino_fan_speed = int(127 * fan_speed)
+            arduino.set_motor_2_speed(arduino_fan_speed)
+        else:
+            motors.set_motor2_speed(fan_speed)
     elif(fan_running):
         fan_running = False
         logging.info("Fan switched off")
-        motors.set_motor2_speed(0)
+        if(settings.FAN_ON_ARDUINO):
+            arduino.set_motor_2_speed(0)
+        else:
+            motors.set_motor2_speed(0)
 
 
 def shutdown():

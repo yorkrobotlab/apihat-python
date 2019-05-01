@@ -10,7 +10,7 @@ import dash_html_components as html
 import dash_daq as daq
 from app import app
 from dash.dependencies import Input, Output, State
-import led, speech, audio, patterns, display, motors, utils, settings
+import led, speech, audio, patterns, display, motors, utils, settings, arduino
 from user_programs import *
 
 from app import app
@@ -101,6 +101,7 @@ def prog_pause_callback(c):
 def stop_button_callback(c):
     if (c == None): return ('')
     motors.set_motor_speeds(0,0)
+    arduino.set_motor_speeds(0,0)
     return('')
 
 @app.callback(
@@ -109,6 +110,7 @@ def stop_button_callback(c):
 def forwards_button_callback(c,value):
     if (c == None): return ('')
     motors.set_motor_speeds(value,value)
+    arduino.set_motor_speeds(int(value),int(value))
     return('')
 
 @app.callback(
@@ -117,6 +119,7 @@ def forwards_button_callback(c,value):
 def backwards_button_callback(c,value):
     if (c == None): return ('')
     motors.set_motor_speeds(-value,-value)
+    arduino.set_motor_speeds(int(-value),int(-value))
     return('')
 
 @app.callback(
@@ -125,6 +128,7 @@ def backwards_button_callback(c,value):
 def left_button_callback(c,value):
     if (c == None): return ('')
     motors.set_motor_speeds(-value,value)
+    arduino.set_motor_speeds(int(-value),int(value))
     return('')
 
 @app.callback(
@@ -133,4 +137,5 @@ def left_button_callback(c,value):
 def right_button_callback(c,value):
     if (c == None): return ('')
     motors.set_motor_speeds(value,-value)
+    arduino.set_motor_speeds(int(value),int(-value))
     return('')
