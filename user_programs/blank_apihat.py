@@ -1,4 +1,4 @@
-# Blank example user program for APIHAT Python library
+# Blank example user program for APIHAT Python library [Version 0.3]
 #
 # User programs should have a "_apihat.py" suffix, be placed in the "user_programs" folder and contain the following functions:
 #
@@ -6,6 +6,8 @@
 # initalise_program()   :  Run once when program is requested or restarted
 # program_loop()        :  Run every loop of the main core program.  Avoid having blocking or unduly long to run code here...
 # stop_program()        :  Run once when the program is stopped (and also when a new program is about to be loaded).  Should ideally reset motors, display and leds to an off state....
+# on_pause()            :  Run once when program is PAUSED
+# on_resume()           :  Run once when program is resumed (before loop)
 
 import logging,settings, motors, led, sensors, display, switch, time
 program_name = "BLANK PROGRAM"
@@ -33,3 +35,13 @@ def stop_program():
     led.stop_animation()
     motors.coast()
     logging.info("Program stopped")
+
+def on_pause():
+    #Do something when program is PAUSED
+    set_display('PAUSED')
+    logging.info("Program paused")
+
+def on_resume():
+    #Do something when program is resumed
+    set_display('')
+    logging.info("Program resumed")

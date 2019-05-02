@@ -181,7 +181,7 @@ audio.setup_audio()
 GPIO.add_event_detect(settings.SWITCH_INTERRUPT_PIN , GPIO.FALLING, switch_interrupt_active)
 
 #Intro bits
-audio.play_audio_file("wav/apihat.wav")
+audio.play_audio_file("wav/aarm.wav")
 display.init_display()
 led.timed_animation(3,4)
 display.display_image_file("images/yrl-white.pbm")
@@ -282,11 +282,11 @@ def pause_user_program():
     global program_state
     if(program_state == PROG_RUNNING):
         program_state = PROG_PAUSED
-        eval(program_name+".set_display('PAUSED')")
+        eval(program_name+".on_pause()")
         utils.write_prog_state_info("Program %s paused" % program_name)
     elif(program_state == PROG_PAUSED):
         program_state = PROG_RUNNING
-        eval(program_name+".set_display('')")
+        eval(program_name+".on_resume()")
         utils.write_prog_state_info("Program %s resumed" % program_name)
 
 
