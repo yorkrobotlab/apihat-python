@@ -1,14 +1,16 @@
 #!/usr/bin/python
-# YRL028 - APIHAT - Python 3 API Version 0.1
+# YRL028 - APIHAT - Python 3 API Version 0.4
 #
 # Functions for the Adafruit PiOLED [SSD1306_128_32] display
 #
-# James Hilder, York Robotics Laboratory, Feb 2019
+# James Hilder, York Robotics Laboratory, June 2019
 
 import time, logging, subprocess, Adafruit_SSD1306, os
 import settings as s, utils
 
 from PIL import Image, ImageDraw, ImageFont
+
+init_ok = False
 
 OLED_BUS = s.OLED_BUS  # The display is attached to bus 8, which translates to bus i2c_8
 
@@ -30,22 +32,36 @@ draw_image = Image.new('1', (width, height))
 
 # Clear display.
 def clear():
-    disp.clear()
-    disp.display()
+    if init_ok:
+        disp.clear()
+        disp.display()
+    else:
+        logging.warning("Request to clear uninitialised display; ignoring")
 
 # Initialize library.
 def init_display():
-    disp.begin()
-    clear()
+  global init_ok
+  try:
+      disp.begin()
+      init_ok = True
+      clear()
+      return True
+  except IOError:
+      logging.error("Error initialising OLED display; check connection or disable in settings.py")
+      init_ok = False
+      return False
 
 # Send the image to the display.  image is a PIL image, 128x32 pixels.
 def display_image(image):
-  if(s.DISPLAY_ROTATED): image = image.transpose(Image.ROTATE_180)
-  try:
-    disp.image(image)
-    disp.display()
-  except IOError:
-    logging.warning("IO Error writing to OLED display")
+    if init_ok:
+        if(s.DISPLAY_ROTATED): image = image.transpose(Image.ROTATE_180)
+        try:
+            disp.image(image)
+            disp.display()
+        except IOError:
+            logging.warning("IO Error writing to OLED display")
+    else:
+        logging.warning("Request to display image on uninitialised display; ignoring")
 
 # Display a warning with specified text
 def warning(text):
@@ -152,7 +168,7 @@ def display_stats():
 if __name__ == "__main__":
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
-    logging.info("YRL027 Display Test")
+    logging.info("YRL028 Display Test")
     init_display()
     display_image_file("images/yrl-white.pbm")
     time.sleep(0.6)

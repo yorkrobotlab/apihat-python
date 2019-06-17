@@ -1,13 +1,13 @@
 #!/usr/bin/python
-# YRL028 - APIHAT - Python 3 API Version 0.3
+# YRL028 - APIHAT - Python 3 API Version 0.4
 #
 # Settings and constants file
 #
-# James Hilder, York Robotics Laboratory, May 2019
+# James Hilder, York Robotics Laboratory, June 2019
 
 import logging,sys
 
-VERSION_STRING="0.03.190501"
+VERSION_STRING="0.04.190617"
 # Set the Python logging level; recommend INFO for deployment and DEBUG for debugging
 LOGGING_MODE = logging.INFO
 #LOGGING_MODE = logging.DEBUG
@@ -52,6 +52,7 @@ FAN_PROGRAM_BASE_YRL031_TEMP = 45                                               
 FAN_PROGRAM_DELTA = 20                                                          #The range of temperature at which fan will reach top speed
 FAN_PROGRAM_HYSTERESIS = 2                                                      #The drop in temperature below base at which fan will stop
 
+HAS_DISPLAY             = True                                                  #Set to true if an OLED module is attached
 DISPLAY_ROTATED         = True                                                  #Set to true if the OLED module is rotated to flip image
 SENSOR_PORT_LIST        = [3,4,5]                                               #The I2C ports which will be scanned for sensors
 
@@ -111,6 +112,7 @@ COLOUR_SENSOR_SENSITIVITY = 0x00                                                
 NOISE_FLOOR = 4000
 
 # The locations for the sensor and system file logs
+speech_filename="/ramdisk/speech_rec.wav"
 system_datafilename="/ramdisk/system.csv"
 sensor_datafilename="/ramdisk/sensor"
 program_request_filename="/ramdisk/progrequest"
@@ -125,10 +127,12 @@ def init():
     global max_brightness
     global sensor_list
     global default_poll_period
+    global has_display
     use_built_in_dip_functions = True                                             #Enable to use the built-in functions for the DIP switches
     sensor_list = []
     initial_led_brightness = 0.3                                                  #Multiplied by max_brightness
     max_brightness = 0.3                                                          #Brightness limit for LEDs.  Range 0-1.  1 is very bright and may cause power\heat issues if not used carefully...
     default_poll_period = POLL_PERIOD
+    has_display = HAS_DISPLAY
     logger = logging.getLogger()
     logger.setLevel(LOGGING_MODE)

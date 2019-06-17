@@ -45,6 +45,10 @@ update_fan_program = False
 
 fan_running = False
 
+poll_s_since_epoch = 0
+next_poll_s = 0
+
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(settings.SWITCH_INTERRUPT_PIN,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
@@ -114,16 +118,12 @@ def switch_interrupt_handler():
     previous_switch_state = current_switch_state
   switch_interrupt = False
 
-
 def stats_thread():
   global update_stats
   while handler_running:
     if stats_mode_enabled and not demo_mode_enabled:
       update_stats = True
     time.sleep(1)
-
-poll_s_since_epoch = 0
-next_poll_s = 0
 
 def battery_thread():
    global update_battery_monitor
@@ -180,31 +180,36 @@ shutdown_timer = None
 audio.setup_audio()
 GPIO.add_event_detect(settings.SWITCH_INTERRUPT_PIN , GPIO.FALLING, switch_interrupt_active)
 
-#Intro bits
-audio.play_audio_file("wav/aarm.wav")
-display.init_display()
+
+#Intro bits - modify or delete as required!
+audio.play_audio_file("wav/apihat.wav")
+if settings.has_display:
+    settings.has_display = display.init_display()
 led.timed_animation(3,4)
-display.display_image_file("images/yrl-white.pbm")
+if settings.has_display: display.display_image_file("images/yrl-white.pbm")
 time.sleep(0.6)
-display.display_image_file("images/yrl028-black.pbm")
+if settings.has_display: display.display_image_file("images/yrl028-black.pbm")
 time.sleep(0.1)
-display.display_image_file("images/yrl028-white.pbm")
+if settings.has_display: display.display_image_file("images/yrl028-white.pbm")
 time.sleep(0.2)
-display.display_image_file("images/apihat-black.pbm")
+if settings.has_display: display.display_image_file("images/apihat-black.pbm")
 time.sleep(0.1)
-display.display_image_file("images/apihat-white.pbm")
+if settings.has_display: display.display_image_file("images/apihat-white.pbm")
 time.sleep(0.8)
+
+
 #Detect if switch attached; if not, display IP address, else start demo threads
 has_switch = switch.detect()
 
 if not has_switch:
-    if(settings.SHOW_HOSTNAME): display.two_line_text_wrapped(utils.get_hostname(),utils.get_ip())
-    else: display.two_line_text_wrapped("IP Address:",utils.get_ip())
+    #Display the IP address [and optionally hostname] on the display
+    if settings.has_display:
+        if(settings.SHOW_HOSTNAME): display.two_line_text_wrapped(utils.get_hostname(),utils.get_ip())
+        else: display.two_line_text_wrapped("IP Address:",utils.get_ip())
     time.sleep(1)
     demo_mode_enabled = settings.ENABLE_DEMO_MODE;
     stats_mode_enabled = settings.ENABLE_STATS_MODE;
     autosense_mode_enabled = settings.ENABLE_AUTOSENSE_MODE;
-
 
 settings.sensor_list = sensors.detect_sensors();
 write_headers()
@@ -326,7 +331,7 @@ def handler_loop():
     if switch_interrupt:
       if has_switch: switch_interrupt_handler()
     if update_stats:
-      display.display_stats()
+      if settings.has_display: display.display_stats()
       update_stats = False
     if update_sensors:
       update_data_files()
@@ -337,11 +342,11 @@ def handler_loop():
       if(voltage < settings.BATTERY_CRITICAL_VOLTAGE and battery_warning_state != 1):
           battery_warning_state = 1
           led.animation(8)
-          display.warning("BATTERY EMPTY")
+          if settings.has_display: display.warning("BATTERY EMPTY")
           audio.play_audio_file("wav/batterycriticallylow.wav")
       elif (voltage < settings.BATTERY_LOW_VOLTAGE and battery_warning_state != 2):
           battery_warning_state = 2
-          display.warning("BATTERY LOW")
+          if settings.has_display: display.warning("BATTERY LOW")
           audio.play_audio_file("wav/batterylow.wav")
       if(battery_warning_state != 0 and voltage>(settings.BATTERY_LOW_VOLTAGE + 0.3)):
           battery_warning_state = 0
