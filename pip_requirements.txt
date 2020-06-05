@@ -18,7 +18,7 @@ dash-renderer==0.16.1
 dash-table==3.1.11
 decorator==4.3.0
 defusedxml==0.5.0
-Django==2.1.7
+Django==2.2.13
 docutils==0.14
 empy==3.3.2
 Flask==1.0.2
